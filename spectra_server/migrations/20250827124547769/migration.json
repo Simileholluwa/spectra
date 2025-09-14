@@ -1,0 +1,50 @@
+{
+  "actions": [
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "artwork",
+        "schema": "public",
+        "addColumns": [
+          {
+            "name": "resolution",
+            "columnType": 8,
+            "isNullable": true,
+            "dartType": "List<String>?"
+          }
+        ],
+        "deleteColumns": [
+          "resolution"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "type": "columnDropped",
+            "message": "Column resolution of table artwork is modified in a way that it must be deleted and recreated.",
+            "table": "artwork",
+            "columns": [
+              "resolution"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "columnDropped",
+      "message": "Column resolution of table artwork is modified in a way that it must be deleted and recreated.",
+      "table": "artwork",
+      "columns": [
+        "resolution"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

@@ -1,0 +1,4 @@
+class: ArtworkCommentUpdates
+fields:
+  likes: int
+  repliesCount: int

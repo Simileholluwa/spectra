@@ -1,0 +1,30 @@
+artwork:
+  - getArtworks:
+  - toggleLike:
+  - updateDownloadsCount:
+  - updateViewsCount:
+  - getTags:
+  - getModels:
+  - getArtwork:
+  - addComment:
+  - getComments:
+  - likeComment:
+  - addReply:
+  - deleteComment:
+  - artworkUpdates:
+  - artworkCommentUpdates:
+assets:
+  - getUploadDescription:
+  - verifyUpload:
+sendEmail:
+  - sendEmail:
+upload:
+  - saveArt:
+  - createUploadToken:
+  - getPresignedUrl:
+  - newArtworkUpdates:
+user:
+  - saveUser:
+  - getUser:
+  - checkIfNewUser:
+  - checkValidUsername:

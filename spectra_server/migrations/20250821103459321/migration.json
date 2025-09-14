@@ -1,0 +1,75 @@
+{
+  "actions": [
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "artwork",
+        "schema": "public",
+        "addColumns": [
+          {
+            "name": "mediaUrl",
+            "columnType": 8,
+            "isNullable": true,
+            "dartType": "List<String>?"
+          },
+          {
+            "name": "thumbnailUrl",
+            "columnType": 8,
+            "isNullable": true,
+            "dartType": "List<String>?"
+          }
+        ],
+        "deleteColumns": [
+          "mediaUrl",
+          "thumbnailUrl"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "type": "columnDropped",
+            "message": "Column mediaUrl of table artwork is modified in a way that it must be deleted and recreated.",
+            "table": "artwork",
+            "columns": [
+              "mediaUrl"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column thumbnailUrl of table artwork is modified in a way that it must be deleted and recreated.",
+            "table": "artwork",
+            "columns": [
+              "thumbnailUrl"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "columnDropped",
+      "message": "Column mediaUrl of table artwork is modified in a way that it must be deleted and recreated.",
+      "table": "artwork",
+      "columns": [
+        "mediaUrl"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column thumbnailUrl of table artwork is modified in a way that it must be deleted and recreated.",
+      "table": "artwork",
+      "columns": [
+        "thumbnailUrl"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

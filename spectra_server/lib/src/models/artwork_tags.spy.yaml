@@ -1,0 +1,9 @@
+class: ArtworkTags
+table: artwork_tags
+fields:
+  artwork: Artwork?, relation(name=artwork_artworkTags, onDelete=Cascade)
+  tag: Tag?, relation(name=tags_artworkTags, onDelete=Cascade)
+indexes:
+  artworktags_index_idx:
+    fields: artworkId, tagId
+    unique: true

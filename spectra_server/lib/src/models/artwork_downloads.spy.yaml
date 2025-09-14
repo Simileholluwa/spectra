@@ -1,0 +1,11 @@
+class: ArtworkDownloads
+table: artwork_downloads
+fields:
+  artwork: Artwork?, relation(onDelete=Cascade)
+  downloadedBy: User?, relation(onDelete=Cascade)
+  dateCreated: DateTime?, default=now
+
+indexes:
+  artwork_downloads_unique_idx:
+    fields: artworkId, downloadedById
+    unique: true

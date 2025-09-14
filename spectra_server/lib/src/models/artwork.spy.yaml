@@ -1,0 +1,24 @@
+class: Artwork
+table: artwork
+
+fields:
+  user: User?, relation(onDelete=Cascade)
+  mediaUrl: List<String>?
+  thumbnailUrl: List<String>?
+  mediaType: MediaType?
+  tags: List<ArtworkTags>?, relation(name=artwork_artworkTags)
+  tagNames: List<String>?
+  prompt: String?
+  models: List<ArtworkModels>?, relation(name=artwork_artworkModels)
+  modelNames: List<String>?
+  resolution: List<String>?
+  allowDownload: bool?, default=true
+  views: int?, default=0
+  likes: int?, default=0
+  downloads: int?, default=0
+  taggedUsers: List<User>?
+  commentsCount: int?, default=0
+  createdAt: DateTime?, default=now
+  updatedAt: DateTime?
+  videoDuration: String?
+  showPrompt: bool?, default=true

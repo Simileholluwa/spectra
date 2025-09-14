@@ -1,0 +1,8 @@
+class: ModelsList
+fields:
+  results: List<Model>
+  count: int
+  page: int
+  numPages: int
+  limit: int
+  canLoadMore: bool

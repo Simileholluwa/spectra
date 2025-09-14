@@ -1,0 +1,8 @@
+class: ArtworkList
+fields:
+  results: List<ArtworkWithUserState>
+  count: int
+  page: int
+  numPages: int
+  limit: int
+  canLoadMore: bool

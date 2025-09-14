@@ -1,0 +1,248 @@
+{
+  "actions": [
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "artwork",
+        "schema": "public",
+        "addColumns": [
+          {
+            "name": "mediaType",
+            "columnType": 6,
+            "isNullable": true,
+            "dartType": "protocol:MediaType?"
+          }
+        ],
+        "deleteColumns": [
+          "tags",
+          "aiModel",
+          "mediaType"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "type": "columnDropped",
+            "message": "Column \"tags\" of table \"artwork\" will be dropped.",
+            "table": "artwork",
+            "columns": [
+              "tags"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"aiModel\" of table \"artwork\" will be dropped.",
+            "table": "artwork",
+            "columns": [
+              "aiModel"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column mediaType of table artwork is modified in a way that it must be deleted and recreated.",
+            "table": "artwork",
+            "columns": [
+              "mediaType"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"createdAt\" of table \"tag\" will be dropped.",
+            "table": "tag",
+            "columns": [
+              "createdAt"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "model",
+        "dartName": "Model",
+        "module": "spectra",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('model_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "name",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "usageCount",
+            "columnType": 6,
+            "isNullable": true,
+            "columnDefault": "1",
+            "dartType": "int?"
+          },
+          {
+            "name": "_artworkAimodelArtworkId",
+            "columnType": 6,
+            "isNullable": true,
+            "dartType": "int?"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "model_fk_0",
+            "columns": [
+              "_artworkAimodelArtworkId"
+            ],
+            "referenceTable": "artwork",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "model_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "tag",
+        "schema": "public",
+        "addColumns": [
+          {
+            "name": "_artworkTagsArtworkId",
+            "columnType": 6,
+            "isNullable": true,
+            "dartType": "int?"
+          }
+        ],
+        "deleteColumns": [
+          "createdAt"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [
+          {
+            "constraintName": "tag_fk_0",
+            "columns": [
+              "_artworkTagsArtworkId"
+            ],
+            "referenceTable": "artwork",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "type": "columnDropped",
+            "message": "Column \"tags\" of table \"artwork\" will be dropped.",
+            "table": "artwork",
+            "columns": [
+              "tags"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"aiModel\" of table \"artwork\" will be dropped.",
+            "table": "artwork",
+            "columns": [
+              "aiModel"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column mediaType of table artwork is modified in a way that it must be deleted and recreated.",
+            "table": "artwork",
+            "columns": [
+              "mediaType"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"createdAt\" of table \"tag\" will be dropped.",
+            "table": "tag",
+            "columns": [
+              "createdAt"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "columnDropped",
+      "message": "Column \"tags\" of table \"artwork\" will be dropped.",
+      "table": "artwork",
+      "columns": [
+        "tags"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"aiModel\" of table \"artwork\" will be dropped.",
+      "table": "artwork",
+      "columns": [
+        "aiModel"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column mediaType of table artwork is modified in a way that it must be deleted and recreated.",
+      "table": "artwork",
+      "columns": [
+        "mediaType"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"createdAt\" of table \"tag\" will be dropped.",
+      "table": "tag",
+      "columns": [
+        "createdAt"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

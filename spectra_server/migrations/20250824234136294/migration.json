@@ -1,0 +1,258 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "likes"
+    },
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "artwork_downloads",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [],
+        "modifyColumns": [],
+        "addIndexes": [
+          {
+            "indexName": "artwork_downloads_unique_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "artworkId"
+              },
+              {
+                "type": 0,
+                "definition": "downloadedById"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          }
+        ],
+        "deleteIndexes": [
+          "artwork_id_unique_idx"
+        ],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "type": "tableDropped",
+            "message": "Table \"likes\" will be dropped.",
+            "table": "likes",
+            "columns": [],
+            "destrucive": true
+          },
+          {
+            "type": "uniqueIndexCreated",
+            "message": "Unique index \"artwork_downloads_unique_idx\" is added to table \"artwork_downloads\". If there are existing rows with duplicate values, this migration will fail.",
+            "table": "artwork_downloads",
+            "columns": [
+              "artworkId",
+              "downloadedById"
+            ],
+            "destrucive": false
+          },
+          {
+            "type": "uniqueIndexCreated",
+            "message": "Unique index \"artwork_likes_unique_idx\" is added to table \"artwork_likes\". If there are existing rows with duplicate values, this migration will fail.",
+            "table": "artwork_likes",
+            "columns": [
+              "artworkId",
+              "likedById"
+            ],
+            "destrucive": false
+          }
+        ]
+      }
+    },
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "artwork_likes",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [],
+        "modifyColumns": [],
+        "addIndexes": [
+          {
+            "indexName": "artwork_likes_unique_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "artworkId"
+              },
+              {
+                "type": 0,
+                "definition": "likedById"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          }
+        ],
+        "deleteIndexes": [
+          "post_id_unique_idx"
+        ],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "type": "tableDropped",
+            "message": "Table \"likes\" will be dropped.",
+            "table": "likes",
+            "columns": [],
+            "destrucive": true
+          },
+          {
+            "type": "uniqueIndexCreated",
+            "message": "Unique index \"artwork_downloads_unique_idx\" is added to table \"artwork_downloads\". If there are existing rows with duplicate values, this migration will fail.",
+            "table": "artwork_downloads",
+            "columns": [
+              "artworkId",
+              "downloadedById"
+            ],
+            "destrucive": false
+          },
+          {
+            "type": "uniqueIndexCreated",
+            "message": "Unique index \"artwork_likes_unique_idx\" is added to table \"artwork_likes\". If there are existing rows with duplicate values, this migration will fail.",
+            "table": "artwork_likes",
+            "columns": [
+              "artworkId",
+              "likedById"
+            ],
+            "destrucive": false
+          }
+        ]
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "artwork_views",
+        "dartName": "ArtworkViews",
+        "module": "spectra",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('artwork_views_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "artworkId",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "viewedById",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "dateCreated",
+            "columnType": 4,
+            "isNullable": true,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime?"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "artwork_views_fk_0",
+            "columns": [
+              "artworkId"
+            ],
+            "referenceTable": "artwork",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 4
+          },
+          {
+            "constraintName": "artwork_views_fk_1",
+            "columns": [
+              "viewedById"
+            ],
+            "referenceTable": "user",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "artwork_views_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "artwork_views_unique_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "artworkId"
+              },
+              {
+                "type": 0,
+                "definition": "viewedById"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "tableDropped",
+      "message": "Table \"likes\" will be dropped.",
+      "table": "likes",
+      "columns": [],
+      "destrucive": true
+    },
+    {
+      "type": "uniqueIndexCreated",
+      "message": "Unique index \"artwork_downloads_unique_idx\" is added to table \"artwork_downloads\". If there are existing rows with duplicate values, this migration will fail.",
+      "table": "artwork_downloads",
+      "columns": [
+        "artworkId",
+        "downloadedById"
+      ],
+      "destrucive": false
+    },
+    {
+      "type": "uniqueIndexCreated",
+      "message": "Unique index \"artwork_likes_unique_idx\" is added to table \"artwork_likes\". If there are existing rows with duplicate values, this migration will fail.",
+      "table": "artwork_likes",
+      "columns": [
+        "artworkId",
+        "likedById"
+      ],
+      "destrucive": false
+    }
+  ],
+  "migrationApiVersion": 1
+}

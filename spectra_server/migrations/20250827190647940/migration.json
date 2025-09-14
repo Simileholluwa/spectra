@@ -1,0 +1,250 @@
+{
+  "actions": [
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "artwork",
+        "schema": "public",
+        "addColumns": [
+          {
+            "name": "modelNames",
+            "columnType": 8,
+            "isNullable": true,
+            "dartType": "List<String>?"
+          }
+        ],
+        "deleteColumns": [],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "type": "uniqueIndexCreated",
+            "message": "Unique index \"artworktags_index_idx\" is added to table \"artwork_tags\". If there are existing rows with duplicate values, this migration will fail.",
+            "table": "artwork_tags",
+            "columns": [
+              "artworkId",
+              "tagId"
+            ],
+            "destrucive": false
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"_artworkAimodelArtworkId\" of table \"model\" will be dropped.",
+            "table": "model",
+            "columns": [
+              "_artworkAimodelArtworkId"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "artwork_models",
+        "dartName": "ArtworkModels",
+        "module": "spectra",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('artwork_models_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "artworkId",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "modelId",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "artwork_models_fk_0",
+            "columns": [
+              "artworkId"
+            ],
+            "referenceTable": "artwork",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 4
+          },
+          {
+            "constraintName": "artwork_models_fk_1",
+            "columns": [
+              "modelId"
+            ],
+            "referenceTable": "model",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 4
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "artwork_models_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "artworkmodels_index_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "artworkId"
+              },
+              {
+                "type": 0,
+                "definition": "modelId"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "artwork_tags",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [],
+        "modifyColumns": [],
+        "addIndexes": [
+          {
+            "indexName": "artworktags_index_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "artworkId"
+              },
+              {
+                "type": 0,
+                "definition": "tagId"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          }
+        ],
+        "deleteIndexes": [
+          "posthashtags_index_idx"
+        ],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "type": "uniqueIndexCreated",
+            "message": "Unique index \"artworktags_index_idx\" is added to table \"artwork_tags\". If there are existing rows with duplicate values, this migration will fail.",
+            "table": "artwork_tags",
+            "columns": [
+              "artworkId",
+              "tagId"
+            ],
+            "destrucive": false
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"_artworkAimodelArtworkId\" of table \"model\" will be dropped.",
+            "table": "model",
+            "columns": [
+              "_artworkAimodelArtworkId"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "model",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [
+          "_artworkAimodelArtworkId"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [
+          "model_fk_0"
+        ],
+        "warnings": [
+          {
+            "type": "uniqueIndexCreated",
+            "message": "Unique index \"artworktags_index_idx\" is added to table \"artwork_tags\". If there are existing rows with duplicate values, this migration will fail.",
+            "table": "artwork_tags",
+            "columns": [
+              "artworkId",
+              "tagId"
+            ],
+            "destrucive": false
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"_artworkAimodelArtworkId\" of table \"model\" will be dropped.",
+            "table": "model",
+            "columns": [
+              "_artworkAimodelArtworkId"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "uniqueIndexCreated",
+      "message": "Unique index \"artworktags_index_idx\" is added to table \"artwork_tags\". If there are existing rows with duplicate values, this migration will fail.",
+      "table": "artwork_tags",
+      "columns": [
+        "artworkId",
+        "tagId"
+      ],
+      "destrucive": false
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"_artworkAimodelArtworkId\" of table \"model\" will be dropped.",
+      "table": "model",
+      "columns": [
+        "_artworkAimodelArtworkId"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

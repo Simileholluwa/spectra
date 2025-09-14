@@ -1,0 +1,12 @@
+class: ArtworkComment
+table: artwork_comment
+fields:
+  artwork: Artwork?, relation(onDelete=Cascade)
+  owner: User?, relation(onDelete=Cascade)
+  text: String?
+  dateCreated: DateTime?, default=now
+  updatedAt: DateTime?
+  likesCount: int?, default=0
+  repliesCount: int?, default=0
+  parent: ArtworkComment?, relation(optional, onDelete=SetNull)
+  isDeleted: bool?, default=false

@@ -1,0 +1,7 @@
+class: Tag
+table: tag
+
+fields:
+  tags: List<ArtworkTags>?, relation(name=tags_artworkTags)
+  name: String
+  usageCount: int?, default=1

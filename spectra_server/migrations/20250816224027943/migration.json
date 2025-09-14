@@ -1,0 +1,215 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "artwork"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "artwork",
+        "dartName": "Artwork",
+        "module": "spectra",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('artwork_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "userId",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "mediaUrl",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "thumbnailUrl",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "mediaType",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "tags",
+            "columnType": 8,
+            "isNullable": true,
+            "dartType": "List<String>?"
+          },
+          {
+            "name": "prompt",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "aiModel",
+            "columnType": 8,
+            "isNullable": false,
+            "dartType": "List<String>"
+          },
+          {
+            "name": "resolution",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "allowDownload",
+            "columnType": 1,
+            "isNullable": true,
+            "columnDefault": "true",
+            "dartType": "bool?"
+          },
+          {
+            "name": "views",
+            "columnType": 6,
+            "isNullable": true,
+            "columnDefault": "0",
+            "dartType": "int?"
+          },
+          {
+            "name": "likes",
+            "columnType": 6,
+            "isNullable": true,
+            "columnDefault": "0",
+            "dartType": "int?"
+          },
+          {
+            "name": "taggedUsers",
+            "columnType": 8,
+            "isNullable": true,
+            "dartType": "List<protocol:User>?"
+          },
+          {
+            "name": "commentsCount",
+            "columnType": 6,
+            "isNullable": true,
+            "columnDefault": "0",
+            "dartType": "int?"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": true,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime?"
+          },
+          {
+            "name": "updatedAt",
+            "columnType": 4,
+            "isNullable": true,
+            "dartType": "DateTime?"
+          },
+          {
+            "name": "showPrompt",
+            "columnType": 1,
+            "isNullable": true,
+            "columnDefault": "true",
+            "dartType": "bool?"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "artwork_fk_0",
+            "columns": [
+              "userId"
+            ],
+            "referenceTable": "user",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "artwork_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "columnDropped",
+      "message": "Column \"title\" of table \"artwork\" will be dropped.",
+      "table": "artwork",
+      "columns": [
+        "title"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"description\" of table \"artwork\" will be dropped.",
+      "table": "artwork",
+      "columns": [
+        "description"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"toolUsed\" of table \"artwork\" will be dropped.",
+      "table": "artwork",
+      "columns": [
+        "toolUsed"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"aspectRation\" of table \"artwork\" will be dropped.",
+      "table": "artwork",
+      "columns": [
+        "aspectRation"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column aiModel of table artwork is modified in a way that it must be deleted and recreated.",
+      "table": "artwork",
+      "columns": [
+        "aiModel"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"artwork\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "artwork",
+      "columns": [
+        "aiModel"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

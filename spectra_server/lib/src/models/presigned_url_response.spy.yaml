@@ -1,0 +1,5 @@
+class: PresignedUrlResponse
+fields:
+  uploadUrl: String
+  fileUrl: String
+  filePath: String

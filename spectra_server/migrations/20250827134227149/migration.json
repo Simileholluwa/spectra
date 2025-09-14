@@ -1,0 +1,96 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "tag"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "tag",
+        "dartName": "Tag",
+        "module": "spectra",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('tag_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "artworkId",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "name",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "usageCount",
+            "columnType": 6,
+            "isNullable": true,
+            "columnDefault": "1",
+            "dartType": "int?"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "tag_fk_0",
+            "columns": [
+              "artworkId"
+            ],
+            "referenceTable": "artwork",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "tag_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "columnDropped",
+      "message": "Column \"_artworkTagsArtworkId\" of table \"tag\" will be dropped.",
+      "table": "tag",
+      "columns": [
+        "_artworkTagsArtworkId"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"tag\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "tag",
+      "columns": [
+        "artworkId"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

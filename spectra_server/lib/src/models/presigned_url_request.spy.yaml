@@ -1,0 +1,5 @@
+class: PresignedUrlRequest
+fields:
+  fileName: String
+  contentType: String
+  filePath: String

@@ -1,0 +1,11 @@
+class: ArtworkViews
+table: artwork_views
+fields:
+  artwork: Artwork?, relation(onDelete=Cascade)
+  viewedBy: User?, relation(onDelete=Cascade)
+  dateCreated: DateTime?, default=now
+
+indexes:
+  artwork_views_unique_idx:
+    fields: artworkId, viewedById
+    unique: true

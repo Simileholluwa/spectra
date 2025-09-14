@@ -1,0 +1,6 @@
+class: ArtworkUpdates
+fields:
+  likes: int
+  views: int
+  downloads: int
+  commentsCount: int

@@ -1,0 +1,6 @@
+class: Model
+table: model
+fields:
+  models: List<ArtworkModels>?, relation(name=models_artworkModels)
+  name: String
+  usageCount: int?, default=1

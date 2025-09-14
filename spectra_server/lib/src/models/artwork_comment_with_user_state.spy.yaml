@@ -1,0 +1,4 @@
+class: ArtworkCommentWithUserState
+fields:
+  comment: ArtworkComment
+  isLiked: bool?, default=false

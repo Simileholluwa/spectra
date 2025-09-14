@@ -1,0 +1,9 @@
+class: ArtworkData
+fields:
+  artWork: Artwork
+  mediaType: MediaType
+  resolution: List<String>
+  files: List<PresignedUrlRequest>
+  thumbnailFiles: List<PresignedUrlRequest>
+  presignedUrlResponse: List<PresignedUrlResponse>?
+  thumbnailPresignedUrlResponse: List<PresignedUrlResponse>?

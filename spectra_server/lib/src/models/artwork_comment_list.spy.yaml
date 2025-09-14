@@ -1,0 +1,8 @@
+class: ArtworkCommentList
+fields:
+  results: List<ArtworkCommentWithUserState>
+  count: int
+  page: int
+  numPages: int
+  limit: int
+  canLoadMore: bool

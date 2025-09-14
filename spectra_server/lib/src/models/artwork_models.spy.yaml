@@ -1,0 +1,9 @@
+class: ArtworkModels
+table: artwork_models
+fields:
+  artwork: Artwork?, relation(name=artwork_artworkModels, onDelete=Cascade)
+  model: Model?, relation(name=models_artworkModels, onDelete=Cascade)
+indexes:
+  artworkmodels_index_idx:
+    fields: artworkId, modelId
+    unique: true

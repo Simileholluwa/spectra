@@ -1,0 +1,9 @@
+class: Follower
+table: follower
+
+fields:
+  follower: User?, relation
+  following:  User?, relation
+  followedAt: DateTime?, default=now
+
+

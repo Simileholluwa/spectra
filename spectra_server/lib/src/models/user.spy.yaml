@@ -1,0 +1,19 @@
+class: User
+table: user
+
+fields:
+  user: module:auth:UserInfo?, relation(onDelete=Cascade)
+  email: String?
+  username: String?
+  bio: String?
+  profileImageUrl: String?
+  website: String?
+  location: String?
+  followersCount: int?, default=0
+  followingCount: int?, default=0
+  artworksCount: int?, default=0
+  likesCount: int?, default=0
+  interests: List<String>?
+  likedArtworks: List<int>?
+  createdAt: DateTime?, default=now
+  updatedAt: DateTime?

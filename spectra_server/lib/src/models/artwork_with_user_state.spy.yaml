@@ -1,0 +1,5 @@
+class: ArtworkWithUserState
+fields:
+  artwork: Artwork
+  isLiked: bool?, default=false
+  isDownloaded: bool?, default=false

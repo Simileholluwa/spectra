@@ -1,0 +1,11 @@
+class: ArtworkLikes
+table: artwork_likes
+fields:
+  artwork: Artwork?, relation(onDelete=Cascade)
+  likedBy: User?, relation(onDelete=Cascade)
+  dateCreated: DateTime?, default=now
+
+indexes:
+  artwork_likes_unique_idx:
+    fields: artworkId, likedById
+    unique: true

@@ -1,0 +1,44 @@
+services:
+  # Development services
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "8090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: spectra
+      POSTGRES_PASSWORD: "GZmuhOdhcRCw1Bpv55N-RTX3Fah-zvUE"
+    volumes:
+      - spectra_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6.2.6
+    ports:
+      - "8091:6379"
+    command: redis-server --requirepass "x2MzUFQpBhrf4INao-x7anSnrgxatqB7"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+  # Test services
+  postgres_test:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "9090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: spectra_test
+      POSTGRES_PASSWORD: "cO7_fHBCeZ2qZ79fN7iB8YAq2ILKNNg0"
+    volumes:
+      - spectra_test_data:/var/lib/postgresql/data
+
+  redis_test:
+    image: redis:6.2.6
+    ports:
+      - "9091:6379"
+    command: redis-server --requirepass "_7UixQzI2HtFToqX71KHBlG0E4AXp13U"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+volumes:
+  spectra_data:
+  spectra_test_data:

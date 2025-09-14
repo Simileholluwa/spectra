@@ -1,0 +1,9 @@
+class: ArtworkFilter
+fields:
+  tag: List<String>?
+  model: List<String>?
+  mediaType: MediaType?
+  hasPrompt: bool?
+  canDownload: bool?
+  startDate: DateTime?
+  endDate: DateTime?

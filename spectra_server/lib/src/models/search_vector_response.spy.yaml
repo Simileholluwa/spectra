@@ -1,0 +1,9 @@
+class: SearchVectorResponse
+fields:
+  fileName: String
+  isDuplicate: bool
+  similarity: double
+  tags: List<String>
+  thumbnail: String
+  resolution: String
+  videoDuration: String
