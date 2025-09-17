@@ -19,16 +19,18 @@ import 'package:spectra_client/src/protocol/artwork_with_user_state.dart'
     as _i7;
 import 'package:spectra_client/src/protocol/artwork_comment.dart' as _i8;
 import 'package:spectra_client/src/protocol/artwork_comment_list.dart' as _i9;
-import 'package:spectra_client/src/protocol/artwork_updates.dart' as _i10;
+import 'package:spectra_client/src/protocol/artwork_comment_with_user_state.dart'
+    as _i10;
+import 'package:spectra_client/src/protocol/artwork_updates.dart' as _i11;
 import 'package:spectra_client/src/protocol/artwork_comment_updates.dart'
-    as _i11;
-import 'package:spectra_client/src/protocol/artwork.dart' as _i12;
+    as _i12;
+import 'package:spectra_client/src/protocol/artwork.dart' as _i13;
 import 'package:spectra_client/src/protocol/presigned_url_response.dart'
-    as _i13;
-import 'package:spectra_client/src/protocol/presigned_url_request.dart' as _i14;
-import 'package:spectra_client/src/protocol/user.dart' as _i15;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i16;
-import 'protocol.dart' as _i17;
+    as _i14;
+import 'package:spectra_client/src/protocol/presigned_url_request.dart' as _i15;
+import 'package:spectra_client/src/protocol/user.dart' as _i16;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i17;
+import 'protocol.dart' as _i18;
 
 /// {@category Endpoint}
 class EndpointArtwork extends _i1.EndpointRef {
@@ -128,6 +130,25 @@ class EndpointArtwork extends _i1.EndpointRef {
         {'comment': comment},
       );
 
+  _i2.Future<_i3.ArtworkList> getRelatedArtworks(
+    int artworkId,
+    List<String> tagNames,
+    List<String> modelNames, {
+    required int limit,
+    required int page,
+  }) =>
+      caller.callServerEndpoint<_i3.ArtworkList>(
+        'artwork',
+        'getRelatedArtworks',
+        {
+          'artworkId': artworkId,
+          'tagNames': tagNames,
+          'modelNames': modelNames,
+          'limit': limit,
+          'page': page,
+        },
+      );
+
   _i2.Future<_i9.ArtworkCommentList> getComments(
     int artworkId,
     int? parentId, {
@@ -147,6 +168,13 @@ class EndpointArtwork extends _i1.EndpointRef {
           'sortBy': sortBy,
           'sortDescending': sortDescending,
         },
+      );
+
+  _i2.Future<_i10.ArtworkCommentWithUserState> getComment(int commentId) =>
+      caller.callServerEndpoint<_i10.ArtworkCommentWithUserState>(
+        'artwork',
+        'getComment',
+        {'commentId': commentId},
       );
 
   _i2.Future<void> likeComment(int commentId) =>
@@ -170,21 +198,30 @@ class EndpointArtwork extends _i1.EndpointRef {
         {'commentId': commentId},
       );
 
-  _i2.Stream<_i10.ArtworkUpdates> artworkUpdates(int artworkId) =>
-      caller.callStreamingServerEndpoint<_i2.Stream<_i10.ArtworkUpdates>,
-          _i10.ArtworkUpdates>(
+  _i2.Stream<_i11.ArtworkUpdates> artworkUpdates(int artworkId) =>
+      caller.callStreamingServerEndpoint<_i2.Stream<_i11.ArtworkUpdates>,
+          _i11.ArtworkUpdates>(
         'artwork',
         'artworkUpdates',
         {'artworkId': artworkId},
         {},
       );
 
-  _i2.Stream<_i11.ArtworkCommentUpdates> artworkCommentUpdates(int commentId) =>
-      caller.callStreamingServerEndpoint<_i2.Stream<_i11.ArtworkCommentUpdates>,
-          _i11.ArtworkCommentUpdates>(
+  _i2.Stream<_i12.ArtworkCommentUpdates> artworkCommentUpdates(int commentId) =>
+      caller.callStreamingServerEndpoint<_i2.Stream<_i12.ArtworkCommentUpdates>,
+          _i12.ArtworkCommentUpdates>(
         'artwork',
         'artworkCommentUpdates',
         {'commentId': commentId},
+        {},
+      );
+
+  _i2.Stream<_i8.ArtworkComment> newArtworkCommentUpdates() =>
+      caller.callStreamingServerEndpoint<_i2.Stream<_i8.ArtworkComment>,
+          _i8.ArtworkComment>(
+        'artwork',
+        'newArtworkCommentUpdates',
+        {},
         {},
       );
 }
@@ -244,8 +281,8 @@ class EndpointUpload extends _i1.EndpointRef {
   @override
   String get name => 'upload';
 
-  _i2.Future<_i12.Artwork?> saveArt(_i12.Artwork artWork) =>
-      caller.callServerEndpoint<_i12.Artwork?>(
+  _i2.Future<_i13.Artwork?> saveArt(_i13.Artwork artWork) =>
+      caller.callServerEndpoint<_i13.Artwork?>(
         'upload',
         'saveArt',
         {'artWork': artWork},
@@ -257,16 +294,16 @@ class EndpointUpload extends _i1.EndpointRef {
         {},
       );
 
-  _i2.Future<List<_i13.PresignedUrlResponse>> getPresignedUrl(
-          List<_i14.PresignedUrlRequest> files) =>
-      caller.callServerEndpoint<List<_i13.PresignedUrlResponse>>(
+  _i2.Future<List<_i14.PresignedUrlResponse>> getPresignedUrl(
+          List<_i15.PresignedUrlRequest> files) =>
+      caller.callServerEndpoint<List<_i14.PresignedUrlResponse>>(
         'upload',
         'getPresignedUrl',
         {'files': files},
       );
 
-  _i2.Stream<_i12.Artwork> newArtworkUpdates() => caller
-          .callStreamingServerEndpoint<_i2.Stream<_i12.Artwork>, _i12.Artwork>(
+  _i2.Stream<_i13.Artwork> newArtworkUpdates() => caller
+          .callStreamingServerEndpoint<_i2.Stream<_i13.Artwork>, _i13.Artwork>(
         'upload',
         'newArtworkUpdates',
         {},
@@ -281,15 +318,15 @@ class EndpointUser extends _i1.EndpointRef {
   @override
   String get name => 'user';
 
-  _i2.Future<_i15.User> saveUser(_i15.User user) =>
-      caller.callServerEndpoint<_i15.User>(
+  _i2.Future<_i16.User> saveUser(_i16.User user) =>
+      caller.callServerEndpoint<_i16.User>(
         'user',
         'saveUser',
         {'user': user},
       );
 
-  _i2.Future<_i15.User?> getUser(String? userId) =>
-      caller.callServerEndpoint<_i15.User?>(
+  _i2.Future<_i16.User?> getUser(String? userId) =>
+      caller.callServerEndpoint<_i16.User?>(
         'user',
         'getUser',
         {'userId': userId},
@@ -312,10 +349,10 @@ class EndpointUser extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    auth = _i16.Caller(client);
+    auth = _i17.Caller(client);
   }
 
-  late final _i16.Caller auth;
+  late final _i17.Caller auth;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -334,7 +371,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i17.Protocol(),
+          _i18.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,

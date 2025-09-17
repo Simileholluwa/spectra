@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:spectra_client/spectra_client.dart';
 import 'package:spectra_flutter/core/core.dart';
 import 'package:spectra_flutter/features/auth/auth.dart';
-import 'package:spectra_flutter/features/upload/upload.dart';
-import 'package:spectra_flutter/features/home/home.dart';
+import 'package:spectra_flutter/features/artwork/artwork.dart';
 import 'package:spectra_flutter/features/user/user.dart';
 part 'router.g.dart';
 
@@ -17,50 +15,32 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 GoRouter router(Ref ref) {
   ref.watch(bootStrapProvider);
   return GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/',
     navigatorKey: _rootNavigatorKey,
     routes: [
       GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomeScreen(),
-        routes: [
-          GoRoute(
-            path: 'upload',
-            builder: (context, state) => const UploadScreen(),
-            redirect: (_, __) {
-              final isSignedIn = ref.watch(sessionProvider).isSignedIn;
-              if (isSignedIn) {
-                return null;
-              }
-              return '/auth';
-            },
-          ),
-          GoRoute(
-            path: ':artworkId',
-            builder: (context, state) {
-              final artworkState = state.extra as ArtworkWithUserState?;
-              return ArworkDetailScreen(
-                artworkId: int.parse(
-                  state.pathParameters['artworkId']!,
-                ),
-                artworkState: artworkState,
-              );
-            },
-          ),
-          GoRoute(
-            path: ':artworkId/comment/:commentId/replies',
-            builder: (context, state) {
-              return RepliesScreen(
-                artworkId: int.parse(
-                  state.pathParameters['artworkId']!,
-                ),
-                parentId: int.parse(
-                  state.pathParameters['commentId']!,
-                ),
-              );
-            },
-          ),
+        path: '/',
+        builder: (context, state) {
+          return SizedBox();
+        },
+        redirect: (context, state) async {
+          final isSignedIn = ref.watch(sessionProvider).isSignedIn;
+          if (isSignedIn) {
+            return ArtRoutes.namespace;
+          } else {
+            return '/auth';
+          }
+        },
+      ),
+      StatefulShellRoute.indexedStack(
+        branches: [
+          ArtRoutes.branch,
         ],
+        builder: (context, state, navigationShell) {
+          return AppWrapper(
+            navigatorShell: navigationShell,
+          );
+        },
       ),
       GoRoute(
         path: '/auth',

@@ -101,7 +101,7 @@ class AppInfiniteList<T> extends StatelessWidget {
                             height: 55,
                             child: FilledButton(
                               onPressed: () {
-                                context.push('/home/upload');
+                                context.push('/artworks/upload');
                               },
                               child: Text(
                                 'Upload your art',

@@ -279,6 +279,48 @@ class Endpoints extends _i1.EndpointDispatch {
             params['comment'],
           ),
         ),
+        'getRelatedArtworks': _i1.MethodConnector(
+          name: 'getRelatedArtworks',
+          params: {
+            'artworkId': _i1.ParameterDescription(
+              name: 'artworkId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'tagNames': _i1.ParameterDescription(
+              name: 'tagNames',
+              type: _i1.getType<List<String>>(),
+              nullable: false,
+            ),
+            'modelNames': _i1.ParameterDescription(
+              name: 'modelNames',
+              type: _i1.getType<List<String>>(),
+              nullable: false,
+            ),
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'page': _i1.ParameterDescription(
+              name: 'page',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['artwork'] as _i2.ArtworkEndpoint).getRelatedArtworks(
+            session,
+            params['artworkId'],
+            params['tagNames'],
+            params['modelNames'],
+            limit: params['limit'],
+            page: params['page'],
+          ),
+        ),
         'getComments': _i1.MethodConnector(
           name: 'getComments',
           params: {
@@ -325,6 +367,24 @@ class Endpoints extends _i1.EndpointDispatch {
             page: params['page'],
             sortBy: params['sortBy'],
             sortDescending: params['sortDescending'],
+          ),
+        ),
+        'getComment': _i1.MethodConnector(
+          name: 'getComment',
+          params: {
+            'commentId': _i1.ParameterDescription(
+              name: 'commentId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['artwork'] as _i2.ArtworkEndpoint).getComment(
+            session,
+            params['commentId'],
           ),
         ),
         'likeComment': _i1.MethodConnector(
@@ -423,6 +483,19 @@ class Endpoints extends _i1.EndpointDispatch {
             session,
             params['commentId'],
           ),
+        ),
+        'newArtworkCommentUpdates': _i1.MethodStreamConnector(
+          name: 'newArtworkCommentUpdates',
+          params: {},
+          streamParams: {},
+          returnType: _i1.MethodStreamReturnType.streamType,
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+            Map<String, Stream> streamParams,
+          ) =>
+              (endpoints['artwork'] as _i2.ArtworkEndpoint)
+                  .newArtworkCommentUpdates(session),
         ),
       },
     );

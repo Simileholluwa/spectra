@@ -10,3 +10,4 @@ fields:
   repliesCount: int?, default=0
   parent: ArtworkComment?, relation(optional, onDelete=SetNull)
   isDeleted: bool?, default=false
+  type: CommentType?

@@ -23,7 +23,7 @@ migrate:
 	cd spectra_server && serverpod create-migration
 
 connect_adb:
-	adb connect 10.91.97.245
+	adb connect 10.236.45.60
 
 run_app:
 	cd spectra_flutter && flutter run

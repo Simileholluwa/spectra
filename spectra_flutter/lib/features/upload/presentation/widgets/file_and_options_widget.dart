@@ -102,10 +102,13 @@ class FileAndOptionsWidget extends ConsumerWidget {
                       ),
                     ),
                     InkWell(
-                      onTap: () {
-                        resetUploadData(
+                      onTap: () async {
+                        final res = await resetUploadData(
                           context,
                         );
+                        if (res == true) {
+                          notifier.reset();
+                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),

@@ -13,6 +13,7 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'artwork.dart' as _i2;
 import 'user.dart' as _i3;
 import 'artwork_comment.dart' as _i4;
+import 'comment_type.dart' as _i5;
 
 abstract class ArtworkComment implements _i1.SerializableModel {
   ArtworkComment._({
@@ -29,6 +30,7 @@ abstract class ArtworkComment implements _i1.SerializableModel {
     this.parentId,
     this.parent,
     bool? isDeleted,
+    this.type,
   })  : dateCreated = dateCreated ?? DateTime.now(),
         likesCount = likesCount ?? 0,
         repliesCount = repliesCount ?? 0,
@@ -48,6 +50,7 @@ abstract class ArtworkComment implements _i1.SerializableModel {
     int? parentId,
     _i4.ArtworkComment? parent,
     bool? isDeleted,
+    _i5.CommentType? type,
   }) = _ArtworkCommentImpl;
 
   factory ArtworkComment.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -79,6 +82,9 @@ abstract class ArtworkComment implements _i1.SerializableModel {
           : _i4.ArtworkComment.fromJson(
               (jsonSerialization['parent'] as Map<String, dynamic>)),
       isDeleted: jsonSerialization['isDeleted'] as bool?,
+      type: jsonSerialization['type'] == null
+          ? null
+          : _i5.CommentType.fromJson((jsonSerialization['type'] as int)),
     );
   }
 
@@ -111,6 +117,8 @@ abstract class ArtworkComment implements _i1.SerializableModel {
 
   bool? isDeleted;
 
+  _i5.CommentType? type;
+
   /// Returns a shallow copy of this [ArtworkComment]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -128,6 +136,7 @@ abstract class ArtworkComment implements _i1.SerializableModel {
     int? parentId,
     _i4.ArtworkComment? parent,
     bool? isDeleted,
+    _i5.CommentType? type,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -145,6 +154,7 @@ abstract class ArtworkComment implements _i1.SerializableModel {
       if (parentId != null) 'parentId': parentId,
       if (parent != null) 'parent': parent?.toJson(),
       if (isDeleted != null) 'isDeleted': isDeleted,
+      if (type != null) 'type': type?.toJson(),
     };
   }
 
@@ -171,6 +181,7 @@ class _ArtworkCommentImpl extends ArtworkComment {
     int? parentId,
     _i4.ArtworkComment? parent,
     bool? isDeleted,
+    _i5.CommentType? type,
   }) : super._(
           id: id,
           artworkId: artworkId,
@@ -185,6 +196,7 @@ class _ArtworkCommentImpl extends ArtworkComment {
           parentId: parentId,
           parent: parent,
           isDeleted: isDeleted,
+          type: type,
         );
 
   /// Returns a shallow copy of this [ArtworkComment]
@@ -205,6 +217,7 @@ class _ArtworkCommentImpl extends ArtworkComment {
     Object? parentId = _Undefined,
     Object? parent = _Undefined,
     Object? isDeleted = _Undefined,
+    Object? type = _Undefined,
   }) {
     return ArtworkComment(
       id: id is int? ? id : this.id,
@@ -220,6 +233,7 @@ class _ArtworkCommentImpl extends ArtworkComment {
       parentId: parentId is int? ? parentId : this.parentId,
       parent: parent is _i4.ArtworkComment? ? parent : this.parent?.copyWith(),
       isDeleted: isDeleted is bool? ? isDeleted : this.isDeleted,
+      type: type is _i5.CommentType? ? type : this.type,
     );
   }
 }

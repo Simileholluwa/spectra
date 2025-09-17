@@ -27,22 +27,23 @@ import 'artwork_updates.dart' as _i15;
 import 'artwork_views.dart' as _i16;
 import 'artwork_with_user_state.dart' as _i17;
 import 'atwork_likes.dart' as _i18;
-import 'exception.dart' as _i19;
-import 'filters.dart' as _i20;
-import 'follower.dart' as _i21;
-import 'media_type.dart' as _i22;
-import 'model.dart' as _i23;
-import 'models_list.dart' as _i24;
-import 'presigned_url_request.dart' as _i25;
-import 'presigned_url_response.dart' as _i26;
-import 'search_vector_response.dart' as _i27;
-import 'tag.dart' as _i28;
-import 'tags_list.dart' as _i29;
-import 'user.dart' as _i30;
+import 'comment_type.dart' as _i19;
+import 'exception.dart' as _i20;
+import 'filters.dart' as _i21;
+import 'follower.dart' as _i22;
+import 'media_type.dart' as _i23;
+import 'model.dart' as _i24;
+import 'models_list.dart' as _i25;
+import 'presigned_url_request.dart' as _i26;
+import 'presigned_url_response.dart' as _i27;
+import 'search_vector_response.dart' as _i28;
+import 'tag.dart' as _i29;
+import 'tags_list.dart' as _i30;
+import 'user.dart' as _i31;
 import 'package:spectra_server/src/generated/presigned_url_response.dart'
-    as _i31;
-import 'package:spectra_server/src/generated/presigned_url_request.dart'
     as _i32;
+import 'package:spectra_server/src/generated/presigned_url_request.dart'
+    as _i33;
 export 'artwork.dart';
 export 'artwork_comment.dart';
 export 'artwork_comment_likes.dart';
@@ -58,6 +59,7 @@ export 'artwork_updates.dart';
 export 'artwork_views.dart';
 export 'artwork_with_user_state.dart';
 export 'atwork_likes.dart';
+export 'comment_type.dart';
 export 'exception.dart';
 export 'filters.dart';
 export 'follower.dart';
@@ -307,6 +309,12 @@ class Protocol extends _i1.SerializationManagerServer {
           isNullable: true,
           dartType: 'bool?',
           columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'type',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'protocol:CommentType?',
         ),
       ],
       foreignKeys: [
@@ -1233,41 +1241,44 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i18.ArtworkLikes) {
       return _i18.ArtworkLikes.fromJson(data) as T;
     }
-    if (t == _i19.ServerSideException) {
-      return _i19.ServerSideException.fromJson(data) as T;
+    if (t == _i19.CommentType) {
+      return _i19.CommentType.fromJson(data) as T;
     }
-    if (t == _i20.ArtworkFilter) {
-      return _i20.ArtworkFilter.fromJson(data) as T;
+    if (t == _i20.ServerSideException) {
+      return _i20.ServerSideException.fromJson(data) as T;
     }
-    if (t == _i21.Follower) {
-      return _i21.Follower.fromJson(data) as T;
+    if (t == _i21.ArtworkFilter) {
+      return _i21.ArtworkFilter.fromJson(data) as T;
     }
-    if (t == _i22.MediaType) {
-      return _i22.MediaType.fromJson(data) as T;
+    if (t == _i22.Follower) {
+      return _i22.Follower.fromJson(data) as T;
     }
-    if (t == _i23.Model) {
-      return _i23.Model.fromJson(data) as T;
+    if (t == _i23.MediaType) {
+      return _i23.MediaType.fromJson(data) as T;
     }
-    if (t == _i24.ModelsList) {
-      return _i24.ModelsList.fromJson(data) as T;
+    if (t == _i24.Model) {
+      return _i24.Model.fromJson(data) as T;
     }
-    if (t == _i25.PresignedUrlRequest) {
-      return _i25.PresignedUrlRequest.fromJson(data) as T;
+    if (t == _i25.ModelsList) {
+      return _i25.ModelsList.fromJson(data) as T;
     }
-    if (t == _i26.PresignedUrlResponse) {
-      return _i26.PresignedUrlResponse.fromJson(data) as T;
+    if (t == _i26.PresignedUrlRequest) {
+      return _i26.PresignedUrlRequest.fromJson(data) as T;
     }
-    if (t == _i27.SearchVectorResponse) {
-      return _i27.SearchVectorResponse.fromJson(data) as T;
+    if (t == _i27.PresignedUrlResponse) {
+      return _i27.PresignedUrlResponse.fromJson(data) as T;
     }
-    if (t == _i28.Tag) {
-      return _i28.Tag.fromJson(data) as T;
+    if (t == _i28.SearchVectorResponse) {
+      return _i28.SearchVectorResponse.fromJson(data) as T;
     }
-    if (t == _i29.TagsList) {
-      return _i29.TagsList.fromJson(data) as T;
+    if (t == _i29.Tag) {
+      return _i29.Tag.fromJson(data) as T;
     }
-    if (t == _i30.User) {
-      return _i30.User.fromJson(data) as T;
+    if (t == _i30.TagsList) {
+      return _i30.TagsList.fromJson(data) as T;
+    }
+    if (t == _i31.User) {
+      return _i31.User.fromJson(data) as T;
     }
     if (t == _i1.getType<_i4.Artwork?>()) {
       return (data != null ? _i4.Artwork.fromJson(data) : null) as T;
@@ -1319,45 +1330,48 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i18.ArtworkLikes?>()) {
       return (data != null ? _i18.ArtworkLikes.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i19.ServerSideException?>()) {
-      return (data != null ? _i19.ServerSideException.fromJson(data) : null)
+    if (t == _i1.getType<_i19.CommentType?>()) {
+      return (data != null ? _i19.CommentType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i20.ServerSideException?>()) {
+      return (data != null ? _i20.ServerSideException.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i20.ArtworkFilter?>()) {
-      return (data != null ? _i20.ArtworkFilter.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i21.ArtworkFilter?>()) {
+      return (data != null ? _i21.ArtworkFilter.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i21.Follower?>()) {
-      return (data != null ? _i21.Follower.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i22.Follower?>()) {
+      return (data != null ? _i22.Follower.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i22.MediaType?>()) {
-      return (data != null ? _i22.MediaType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i23.MediaType?>()) {
+      return (data != null ? _i23.MediaType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i23.Model?>()) {
-      return (data != null ? _i23.Model.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i24.Model?>()) {
+      return (data != null ? _i24.Model.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i24.ModelsList?>()) {
-      return (data != null ? _i24.ModelsList.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i25.ModelsList?>()) {
+      return (data != null ? _i25.ModelsList.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i25.PresignedUrlRequest?>()) {
-      return (data != null ? _i25.PresignedUrlRequest.fromJson(data) : null)
+    if (t == _i1.getType<_i26.PresignedUrlRequest?>()) {
+      return (data != null ? _i26.PresignedUrlRequest.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i26.PresignedUrlResponse?>()) {
-      return (data != null ? _i26.PresignedUrlResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i27.PresignedUrlResponse?>()) {
+      return (data != null ? _i27.PresignedUrlResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i27.SearchVectorResponse?>()) {
-      return (data != null ? _i27.SearchVectorResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i28.SearchVectorResponse?>()) {
+      return (data != null ? _i28.SearchVectorResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i28.Tag?>()) {
-      return (data != null ? _i28.Tag.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i29.Tag?>()) {
+      return (data != null ? _i29.Tag.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i29.TagsList?>()) {
-      return (data != null ? _i29.TagsList.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i30.TagsList?>()) {
+      return (data != null ? _i30.TagsList.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i30.User?>()) {
-      return (data != null ? _i30.User.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i31.User?>()) {
+      return (data != null ? _i31.User.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<List<String>?>()) {
       return (data != null
@@ -1396,9 +1410,9 @@ class Protocol extends _i1.SerializationManagerServer {
           ? (data as List).map((e) => deserialize<String>(e)).toList()
           : null) as T;
     }
-    if (t == _i1.getType<List<_i30.User>?>()) {
+    if (t == _i1.getType<List<_i31.User>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i30.User>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i31.User>(e)).toList()
           : null) as T;
     }
     if (t == List<_i9.ArtworkCommentWithUserState>) {
@@ -1409,22 +1423,22 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
     }
-    if (t == List<_i25.PresignedUrlRequest>) {
+    if (t == List<_i26.PresignedUrlRequest>) {
       return (data as List)
-          .map((e) => deserialize<_i25.PresignedUrlRequest>(e))
+          .map((e) => deserialize<_i26.PresignedUrlRequest>(e))
           .toList() as T;
     }
-    if (t == _i1.getType<List<_i26.PresignedUrlResponse>?>()) {
+    if (t == _i1.getType<List<_i27.PresignedUrlResponse>?>()) {
       return (data != null
           ? (data as List)
-              .map((e) => deserialize<_i26.PresignedUrlResponse>(e))
+              .map((e) => deserialize<_i27.PresignedUrlResponse>(e))
               .toList()
           : null) as T;
     }
-    if (t == _i1.getType<List<_i26.PresignedUrlResponse>?>()) {
+    if (t == _i1.getType<List<_i27.PresignedUrlResponse>?>()) {
       return (data != null
           ? (data as List)
-              .map((e) => deserialize<_i26.PresignedUrlResponse>(e))
+              .map((e) => deserialize<_i27.PresignedUrlResponse>(e))
               .toList()
           : null) as T;
     }
@@ -1450,8 +1464,8 @@ class Protocol extends _i1.SerializationManagerServer {
               .toList()
           : null) as T;
     }
-    if (t == List<_i23.Model>) {
-      return (data as List).map((e) => deserialize<_i23.Model>(e)).toList()
+    if (t == List<_i24.Model>) {
+      return (data as List).map((e) => deserialize<_i24.Model>(e)).toList()
           as T;
     }
     if (t == _i1.getType<List<_i14.ArtworkTags>?>()) {
@@ -1459,8 +1473,8 @@ class Protocol extends _i1.SerializationManagerServer {
           ? (data as List).map((e) => deserialize<_i14.ArtworkTags>(e)).toList()
           : null) as T;
     }
-    if (t == List<_i28.Tag>) {
-      return (data as List).map((e) => deserialize<_i28.Tag>(e)).toList() as T;
+    if (t == List<_i29.Tag>) {
+      return (data as List).map((e) => deserialize<_i29.Tag>(e)).toList() as T;
     }
     if (t == _i1.getType<List<String>?>()) {
       return (data != null
@@ -1472,14 +1486,17 @@ class Protocol extends _i1.SerializationManagerServer {
           ? (data as List).map((e) => deserialize<int>(e)).toList()
           : null) as T;
     }
-    if (t == List<_i31.PresignedUrlResponse>) {
+    if (t == List<String>) {
+      return (data as List).map((e) => deserialize<String>(e)).toList() as T;
+    }
+    if (t == List<_i32.PresignedUrlResponse>) {
       return (data as List)
-          .map((e) => deserialize<_i31.PresignedUrlResponse>(e))
+          .map((e) => deserialize<_i32.PresignedUrlResponse>(e))
           .toList() as T;
     }
-    if (t == List<_i32.PresignedUrlRequest>) {
+    if (t == List<_i33.PresignedUrlRequest>) {
       return (data as List)
-          .map((e) => deserialize<_i32.PresignedUrlRequest>(e))
+          .map((e) => deserialize<_i33.PresignedUrlRequest>(e))
           .toList() as T;
     }
     try {
@@ -1540,40 +1557,43 @@ class Protocol extends _i1.SerializationManagerServer {
     if (data is _i18.ArtworkLikes) {
       return 'ArtworkLikes';
     }
-    if (data is _i19.ServerSideException) {
+    if (data is _i19.CommentType) {
+      return 'CommentType';
+    }
+    if (data is _i20.ServerSideException) {
       return 'ServerSideException';
     }
-    if (data is _i20.ArtworkFilter) {
+    if (data is _i21.ArtworkFilter) {
       return 'ArtworkFilter';
     }
-    if (data is _i21.Follower) {
+    if (data is _i22.Follower) {
       return 'Follower';
     }
-    if (data is _i22.MediaType) {
+    if (data is _i23.MediaType) {
       return 'MediaType';
     }
-    if (data is _i23.Model) {
+    if (data is _i24.Model) {
       return 'Model';
     }
-    if (data is _i24.ModelsList) {
+    if (data is _i25.ModelsList) {
       return 'ModelsList';
     }
-    if (data is _i25.PresignedUrlRequest) {
+    if (data is _i26.PresignedUrlRequest) {
       return 'PresignedUrlRequest';
     }
-    if (data is _i26.PresignedUrlResponse) {
+    if (data is _i27.PresignedUrlResponse) {
       return 'PresignedUrlResponse';
     }
-    if (data is _i27.SearchVectorResponse) {
+    if (data is _i28.SearchVectorResponse) {
       return 'SearchVectorResponse';
     }
-    if (data is _i28.Tag) {
+    if (data is _i29.Tag) {
       return 'Tag';
     }
-    if (data is _i29.TagsList) {
+    if (data is _i30.TagsList) {
       return 'TagsList';
     }
-    if (data is _i30.User) {
+    if (data is _i31.User) {
       return 'User';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -1638,41 +1658,44 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'ArtworkLikes') {
       return deserialize<_i18.ArtworkLikes>(data['data']);
     }
+    if (dataClassName == 'CommentType') {
+      return deserialize<_i19.CommentType>(data['data']);
+    }
     if (dataClassName == 'ServerSideException') {
-      return deserialize<_i19.ServerSideException>(data['data']);
+      return deserialize<_i20.ServerSideException>(data['data']);
     }
     if (dataClassName == 'ArtworkFilter') {
-      return deserialize<_i20.ArtworkFilter>(data['data']);
+      return deserialize<_i21.ArtworkFilter>(data['data']);
     }
     if (dataClassName == 'Follower') {
-      return deserialize<_i21.Follower>(data['data']);
+      return deserialize<_i22.Follower>(data['data']);
     }
     if (dataClassName == 'MediaType') {
-      return deserialize<_i22.MediaType>(data['data']);
+      return deserialize<_i23.MediaType>(data['data']);
     }
     if (dataClassName == 'Model') {
-      return deserialize<_i23.Model>(data['data']);
+      return deserialize<_i24.Model>(data['data']);
     }
     if (dataClassName == 'ModelsList') {
-      return deserialize<_i24.ModelsList>(data['data']);
+      return deserialize<_i25.ModelsList>(data['data']);
     }
     if (dataClassName == 'PresignedUrlRequest') {
-      return deserialize<_i25.PresignedUrlRequest>(data['data']);
+      return deserialize<_i26.PresignedUrlRequest>(data['data']);
     }
     if (dataClassName == 'PresignedUrlResponse') {
-      return deserialize<_i26.PresignedUrlResponse>(data['data']);
+      return deserialize<_i27.PresignedUrlResponse>(data['data']);
     }
     if (dataClassName == 'SearchVectorResponse') {
-      return deserialize<_i27.SearchVectorResponse>(data['data']);
+      return deserialize<_i28.SearchVectorResponse>(data['data']);
     }
     if (dataClassName == 'Tag') {
-      return deserialize<_i28.Tag>(data['data']);
+      return deserialize<_i29.Tag>(data['data']);
     }
     if (dataClassName == 'TagsList') {
-      return deserialize<_i29.TagsList>(data['data']);
+      return deserialize<_i30.TagsList>(data['data']);
     }
     if (dataClassName == 'User') {
-      return deserialize<_i30.User>(data['data']);
+      return deserialize<_i31.User>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -1716,14 +1739,14 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i16.ArtworkViews.t;
       case _i18.ArtworkLikes:
         return _i18.ArtworkLikes.t;
-      case _i21.Follower:
-        return _i21.Follower.t;
-      case _i23.Model:
-        return _i23.Model.t;
-      case _i28.Tag:
-        return _i28.Tag.t;
-      case _i30.User:
-        return _i30.User.t;
+      case _i22.Follower:
+        return _i22.Follower.t;
+      case _i24.Model:
+        return _i24.Model.t;
+      case _i29.Tag:
+        return _i29.Tag.t;
+      case _i31.User:
+        return _i31.User.t;
     }
     return null;
   }

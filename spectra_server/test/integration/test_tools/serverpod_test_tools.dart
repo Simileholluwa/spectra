@@ -22,15 +22,17 @@ import 'package:spectra_server/src/generated/artwork_with_user_state.dart'
     as _i8;
 import 'package:spectra_server/src/generated/artwork_comment.dart' as _i9;
 import 'package:spectra_server/src/generated/artwork_comment_list.dart' as _i10;
-import 'package:spectra_server/src/generated/artwork_updates.dart' as _i11;
+import 'package:spectra_server/src/generated/artwork_comment_with_user_state.dart'
+    as _i11;
+import 'package:spectra_server/src/generated/artwork_updates.dart' as _i12;
 import 'package:spectra_server/src/generated/artwork_comment_updates.dart'
-    as _i12;
-import 'package:spectra_server/src/generated/artwork.dart' as _i13;
+    as _i13;
+import 'package:spectra_server/src/generated/artwork.dart' as _i14;
 import 'package:spectra_server/src/generated/presigned_url_response.dart'
-    as _i14;
-import 'package:spectra_server/src/generated/presigned_url_request.dart'
     as _i15;
-import 'package:spectra_server/src/generated/user.dart' as _i16;
+import 'package:spectra_server/src/generated/presigned_url_request.dart'
+    as _i16;
+import 'package:spectra_server/src/generated/user.dart' as _i17;
 import 'package:spectra_server/src/generated/protocol.dart';
 import 'package:spectra_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -430,6 +432,45 @@ class _ArtworkEndpoint {
     });
   }
 
+  _i3.Future<_i4.ArtworkList> getRelatedArtworks(
+    _i1.TestSessionBuilder sessionBuilder,
+    int artworkId,
+    List<String> tagNames,
+    List<String> modelNames, {
+    required int limit,
+    required int page,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'artwork',
+        method: 'getRelatedArtworks',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'artwork',
+          methodName: 'getRelatedArtworks',
+          parameters: _i1.testObjectToJson({
+            'artworkId': artworkId,
+            'tagNames': tagNames,
+            'modelNames': modelNames,
+            'limit': limit,
+            'page': page,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i4.ArtworkList>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _i3.Future<_i10.ArtworkCommentList> getComments(
     _i1.TestSessionBuilder sessionBuilder,
     int artworkId,
@@ -464,6 +505,35 @@ class _ArtworkEndpoint {
           _localUniqueSession,
           _localCallContext.arguments,
         ) as _i3.Future<_i10.ArtworkCommentList>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i11.ArtworkCommentWithUserState> getComment(
+    _i1.TestSessionBuilder sessionBuilder,
+    int commentId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'artwork',
+        method: 'getComment',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'artwork',
+          methodName: 'getComment',
+          parameters: _i1.testObjectToJson({'commentId': commentId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i11.ArtworkCommentWithUserState>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -558,11 +628,11 @@ class _ArtworkEndpoint {
     });
   }
 
-  _i3.Stream<_i11.ArtworkUpdates> artworkUpdates(
+  _i3.Stream<_i12.ArtworkUpdates> artworkUpdates(
     _i1.TestSessionBuilder sessionBuilder,
     int artworkId,
   ) {
-    var _localTestStreamManager = _i1.TestStreamManager<_i11.ArtworkUpdates>();
+    var _localTestStreamManager = _i1.TestStreamManager<_i12.ArtworkUpdates>();
     _i1.callStreamFunctionAndHandleExceptions(
       () async {
         var _localUniqueSession =
@@ -590,12 +660,12 @@ class _ArtworkEndpoint {
     return _localTestStreamManager.outputStreamController.stream;
   }
 
-  _i3.Stream<_i12.ArtworkCommentUpdates> artworkCommentUpdates(
+  _i3.Stream<_i13.ArtworkCommentUpdates> artworkCommentUpdates(
     _i1.TestSessionBuilder sessionBuilder,
     int commentId,
   ) {
     var _localTestStreamManager =
-        _i1.TestStreamManager<_i12.ArtworkCommentUpdates>();
+        _i1.TestStreamManager<_i13.ArtworkCommentUpdates>();
     _i1.callStreamFunctionAndHandleExceptions(
       () async {
         var _localUniqueSession =
@@ -609,6 +679,36 @@ class _ArtworkEndpoint {
           endpointPath: 'artwork',
           methodName: 'artworkCommentUpdates',
           arguments: {'commentId': commentId},
+          requestedInputStreams: [],
+          serializationManager: _serializationManager,
+        );
+        await _localTestStreamManager.callStreamMethod(
+          _localCallContext,
+          _localUniqueSession,
+          {},
+        );
+      },
+      _localTestStreamManager.outputStreamController,
+    );
+    return _localTestStreamManager.outputStreamController.stream;
+  }
+
+  _i3.Stream<_i9.ArtworkComment> newArtworkCommentUpdates(
+      _i1.TestSessionBuilder sessionBuilder) {
+    var _localTestStreamManager = _i1.TestStreamManager<_i9.ArtworkComment>();
+    _i1.callStreamFunctionAndHandleExceptions(
+      () async {
+        var _localUniqueSession =
+            (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+          endpoint: 'artwork',
+          method: 'newArtworkCommentUpdates',
+        );
+        var _localCallContext =
+            await _endpointDispatch.getMethodStreamCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'artwork',
+          methodName: 'newArtworkCommentUpdates',
+          arguments: {},
           requestedInputStreams: [],
           serializationManager: _serializationManager,
         );
@@ -753,9 +853,9 @@ class _UploadEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i13.Artwork?> saveArt(
+  _i3.Future<_i14.Artwork?> saveArt(
     _i1.TestSessionBuilder sessionBuilder,
-    _i13.Artwork artWork,
+    _i14.Artwork artWork,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -774,7 +874,7 @@ class _UploadEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i13.Artwork?>);
+        ) as _i3.Future<_i14.Artwork?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -809,9 +909,9 @@ class _UploadEndpoint {
     });
   }
 
-  _i3.Future<List<_i14.PresignedUrlResponse>> getPresignedUrl(
+  _i3.Future<List<_i15.PresignedUrlResponse>> getPresignedUrl(
     _i1.TestSessionBuilder sessionBuilder,
-    List<_i15.PresignedUrlRequest> files,
+    List<_i16.PresignedUrlRequest> files,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -830,7 +930,7 @@ class _UploadEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<List<_i14.PresignedUrlResponse>>);
+        ) as _i3.Future<List<_i15.PresignedUrlResponse>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -838,9 +938,9 @@ class _UploadEndpoint {
     });
   }
 
-  _i3.Stream<_i13.Artwork> newArtworkUpdates(
+  _i3.Stream<_i14.Artwork> newArtworkUpdates(
       _i1.TestSessionBuilder sessionBuilder) {
-    var _localTestStreamManager = _i1.TestStreamManager<_i13.Artwork>();
+    var _localTestStreamManager = _i1.TestStreamManager<_i14.Artwork>();
     _i1.callStreamFunctionAndHandleExceptions(
       () async {
         var _localUniqueSession =
@@ -879,9 +979,9 @@ class _UserEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i16.User> saveUser(
+  _i3.Future<_i17.User> saveUser(
     _i1.TestSessionBuilder sessionBuilder,
-    _i16.User user,
+    _i17.User user,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -900,7 +1000,7 @@ class _UserEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i16.User>);
+        ) as _i3.Future<_i17.User>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -908,7 +1008,7 @@ class _UserEndpoint {
     });
   }
 
-  _i3.Future<_i16.User?> getUser(
+  _i3.Future<_i17.User?> getUser(
     _i1.TestSessionBuilder sessionBuilder,
     String? userId,
   ) async {
@@ -929,7 +1029,7 @@ class _UserEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i16.User?>);
+        ) as _i3.Future<_i17.User?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

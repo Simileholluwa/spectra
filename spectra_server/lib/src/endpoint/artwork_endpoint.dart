@@ -68,6 +68,11 @@ class ArtworkEndpoint extends Endpoint {
         user: User.include(
           user: UserInfo.include(),
         ),
+        tags: ArtworkTags.includeList(
+          include: ArtworkTags.include(
+            tag: Tag.include(),
+          ),
+        ),
       ),
       where: (row) => whereClause(row),
       orderBy: (row) {
@@ -399,8 +404,8 @@ class ArtworkEndpoint extends Endpoint {
         message: 'Artwork not found',
       );
     }
-    final authIngo = await session.authenticated;
-    final userId = authIngo?.userId;
+    final authInfo = await session.authenticated;
+    final userId = authInfo?.userId;
     bool isLiked = false;
     bool isDownloaded = false;
 
@@ -462,12 +467,14 @@ class ArtworkEndpoint extends Endpoint {
               return updatedComment;
             }
           }
-          final newComment = await ArtworkComment.db.insertRow(
+          final newComment = await addArtworkComment(
             session,
             comment.copyWith(
               artworkId: artwork.id!,
               ownerId: user.userId,
+              type: CommentType.comment,
             ),
+            user,
           );
           await updateArtwork(
             session,
@@ -484,6 +491,112 @@ class ArtworkEndpoint extends Endpoint {
           throw ServerSideException(message: e.toString());
         }
       },
+    );
+  }
+
+  Future<ArtworkList> getRelatedArtworks(
+    Session session,
+    int artworkId,
+    List<String> tagNames,
+    List<String> modelNames, {
+    int limit = 50,
+    int page = 1,
+  }) async {
+    whereClause(ArtworkTable row) {
+      var clause = row.id.notEquals(artworkId) & row.mediaType.notEquals(null);
+
+      Expression? tagClause;
+      if (tagNames.isNotEmpty) {
+        tagClause = row.tags.any(
+          (t) => t.tag.name.inSet(
+            tagNames.toSet(),
+          ),
+        );
+      }
+      Expression? modelClause;
+      if (modelNames.isNotEmpty) {
+        modelClause = row.models.any(
+          (m) => m.model.name.inSet(
+            modelNames.toSet(),
+          ),
+        );
+      }
+      if (tagClause != null && modelClause != null) {
+        clause &= (tagClause | modelClause);
+      } else if (tagClause != null) {
+        clause &= tagClause;
+      } else if (modelClause != null) {
+        clause &= modelClause;
+      }
+      return clause;
+    }
+
+    final count = await Artwork.db.count(
+      session,
+      where: (row) => whereClause(row),
+    );
+
+    final results = await Artwork.db.find(
+      session,
+      where: (row) => whereClause(row),
+      include: Artwork.include(
+        user: User.include(
+          user: UserInfo.include(),
+        ),
+        tags: ArtworkTags.includeList(
+          include: ArtworkTags.include(
+            tag: Tag.include(),
+          ),
+        ),
+        models: ArtworkModels.includeList(
+          include: ArtworkModels.include(
+            model: Model.include(),
+          ),
+        ),
+      ),
+      orderBy: (row) => row.createdAt,
+      orderDescending: true,
+      limit: limit,
+      offset: (page - 1) * limit,
+    );
+
+    final user = await session.authenticated;
+    final userId = user?.userId;
+    Set<int> likedIds = {};
+    Set<int> downloadedIds = {};
+
+    if (userId != null && results.isNotEmpty) {
+      final artworkIds = results.map((a) => a.id!).toList();
+      final userLikes = await ArtworkLikes.db.find(
+        session,
+        where: (t) =>
+            t.likedById.equals(userId) & t.artworkId.inSet(artworkIds.toSet()),
+      );
+      final userDownloads = await ArtworkDownloads.db.find(
+        session,
+        where: (t) =>
+            t.downloadedById.equals(userId) &
+            t.artworkId.inSet(artworkIds.toSet()),
+      );
+      likedIds = userLikes.map((l) => l.artworkId).toSet();
+      downloadedIds = userDownloads.map((d) => d.artworkId).toSet();
+    }
+
+    final enrichedResults = results.map((a) {
+      return ArtworkWithUserState(
+        artwork: a,
+        isLiked: likedIds.contains(a.id),
+        isDownloaded: downloadedIds.contains(a.id),
+      );
+    }).toList();
+
+    return ArtworkList(
+      results: enrichedResults,
+      limit: limit,
+      count: count,
+      page: page,
+      numPages: (count / limit).ceil(),
+      canLoadMore: page * limit < count,
     );
   }
 
@@ -562,6 +675,46 @@ class ArtworkEndpoint extends Endpoint {
       numPages: (count / limit).ceil(),
       limit: limit,
       canLoadMore: page * limit < count,
+    );
+  }
+
+  Future<ArtworkCommentWithUserState> getComment(
+    Session session,
+    int commentId,
+  ) async {
+    final comment = await ArtworkComment.db.findById(
+      session,
+      commentId,
+      include: ArtworkComment.include(
+        owner: User.include(
+          user: UserInfo.include(),
+        ),
+      ),
+    );
+    final authInfo = await session.authenticated;
+    final userId = authInfo?.userId;
+    bool isLiked = false;
+
+    if (comment == null) {
+      throw ServerSideException(
+        message: 'Comment not found',
+      );
+    }
+
+    if (userId != null) {
+      final likedComment = await ArtworkCommentLikes.db.findFirstRow(
+        session,
+        where: (row) =>
+            row.artworkCommentId.equals(commentId) &
+            row.likedById.equals(
+              userId,
+            ),
+      );
+      isLiked = likedComment != null;
+    }
+    return ArtworkCommentWithUserState(
+      comment: comment,
+      isLiked: isLiked,
     );
   }
 
@@ -646,6 +799,7 @@ class ArtworkEndpoint extends Endpoint {
             artworkId: parentComment.artworkId,
             parentId: parentComment.id,
             ownerId: user.userId,
+            type: CommentType.reply,
           ),
         );
         await updateArtworkComment(
@@ -712,19 +866,22 @@ class ArtworkEndpoint extends Endpoint {
                 isDeleted: true,
               ),
             );
+          } else {
+            await updateArtwork(
+              session,
+              artwork.copyWith(
+                commentsCount: artwork.commentsCount! - 1,
+              ),
+            );
           }
-          await updateArtwork(
-            session,
-            artwork.copyWith(
-              commentsCount: artwork.commentsCount! - 1,
-            ),
-          );
         } catch (e) {
           session.log(
             'Error in deleting comment: $e',
             level: LogLevel.error,
           );
-          throw ServerSideException(message: e.toString());
+          throw ServerSideException(
+            message: e.toString(),
+          );
         }
       },
     );
@@ -758,7 +915,10 @@ class ArtworkEndpoint extends Endpoint {
     );
   }
 
-  Stream<ArtworkUpdates> artworkUpdates(Session session, int artworkId) async* {
+  Stream<ArtworkUpdates> artworkUpdates(
+    Session session,
+    int artworkId,
+  ) async* {
     var updateStream = session.messages.createStream<ArtworkUpdates>(
       'artwork_$artworkId',
     );
@@ -789,7 +949,10 @@ class ArtworkEndpoint extends Endpoint {
       'artwork_$commentId',
     );
 
-    final comment = await ArtworkComment.db.findById(session, commentId);
+    final comment = await ArtworkComment.db.findById(
+      session,
+      commentId,
+    );
     if (comment != null) {
       yield ArtworkCommentUpdates(
         likes: comment.likesCount!,
@@ -802,6 +965,29 @@ class ArtworkEndpoint extends Endpoint {
         repliesCount: update.repliesCount,
       );
     }
+  }
+
+  Stream<ArtworkComment> newArtworkCommentUpdates(Session session) async* {
+    yield* session.messages.createStream<ArtworkComment>('new_artwork_comment');
+  }
+
+  @doNotGenerate
+  Future<ArtworkComment> addArtworkComment(
+    Session session,
+    ArtworkComment artworkComment,
+    User user,
+  ) async {
+    final saved = await ArtworkComment.db.insertRow(
+      session,
+      artworkComment,
+    );
+    await session.messages.postMessage(
+      'new_artwork_comment',
+      saved.copyWith(
+        owner: user,
+      ),
+    );
+    return saved;
   }
 
   @doNotGenerate

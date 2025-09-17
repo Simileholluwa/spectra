@@ -7,12 +7,15 @@ artwork:
   - getModels:
   - getArtwork:
   - addComment:
+  - getRelatedArtworks:
   - getComments:
+  - getComment:
   - likeComment:
   - addReply:
   - deleteComment:
   - artworkUpdates:
   - artworkCommentUpdates:
+  - newArtworkCommentUpdates:
 assets:
   - getUploadDescription:
   - verifyUpload:

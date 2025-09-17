@@ -38,3 +38,6 @@ export './widgets/app_dropdown_button.dart';
 export './widgets/app_date_picker.dart';
 export './widgets/loading_error.dart';
 export './widgets/app_user_profile_image.dart';
+export './widgets/app_wrapper.dart';
+export './widgets/app_bottom_navigation.dart';
+export './providers/values_provider.dart';

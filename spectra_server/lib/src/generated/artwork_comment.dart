@@ -15,6 +15,7 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import 'artwork.dart' as _i2;
 import 'user.dart' as _i3;
 import 'artwork_comment.dart' as _i4;
+import 'comment_type.dart' as _i5;
 
 abstract class ArtworkComment
     implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
@@ -32,6 +33,7 @@ abstract class ArtworkComment
     this.parentId,
     this.parent,
     bool? isDeleted,
+    this.type,
   })  : dateCreated = dateCreated ?? DateTime.now(),
         likesCount = likesCount ?? 0,
         repliesCount = repliesCount ?? 0,
@@ -51,6 +53,7 @@ abstract class ArtworkComment
     int? parentId,
     _i4.ArtworkComment? parent,
     bool? isDeleted,
+    _i5.CommentType? type,
   }) = _ArtworkCommentImpl;
 
   factory ArtworkComment.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -82,6 +85,9 @@ abstract class ArtworkComment
           : _i4.ArtworkComment.fromJson(
               (jsonSerialization['parent'] as Map<String, dynamic>)),
       isDeleted: jsonSerialization['isDeleted'] as bool?,
+      type: jsonSerialization['type'] == null
+          ? null
+          : _i5.CommentType.fromJson((jsonSerialization['type'] as int)),
     );
   }
 
@@ -116,6 +122,8 @@ abstract class ArtworkComment
 
   bool? isDeleted;
 
+  _i5.CommentType? type;
+
   @override
   _i1.Table<int?> get table => t;
 
@@ -136,6 +144,7 @@ abstract class ArtworkComment
     int? parentId,
     _i4.ArtworkComment? parent,
     bool? isDeleted,
+    _i5.CommentType? type,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -153,6 +162,7 @@ abstract class ArtworkComment
       if (parentId != null) 'parentId': parentId,
       if (parent != null) 'parent': parent?.toJson(),
       if (isDeleted != null) 'isDeleted': isDeleted,
+      if (type != null) 'type': type?.toJson(),
     };
   }
 
@@ -172,6 +182,7 @@ abstract class ArtworkComment
       if (parentId != null) 'parentId': parentId,
       if (parent != null) 'parent': parent?.toJsonForProtocol(),
       if (isDeleted != null) 'isDeleted': isDeleted,
+      if (type != null) 'type': type?.toJson(),
     };
   }
 
@@ -230,6 +241,7 @@ class _ArtworkCommentImpl extends ArtworkComment {
     int? parentId,
     _i4.ArtworkComment? parent,
     bool? isDeleted,
+    _i5.CommentType? type,
   }) : super._(
           id: id,
           artworkId: artworkId,
@@ -244,6 +256,7 @@ class _ArtworkCommentImpl extends ArtworkComment {
           parentId: parentId,
           parent: parent,
           isDeleted: isDeleted,
+          type: type,
         );
 
   /// Returns a shallow copy of this [ArtworkComment]
@@ -264,6 +277,7 @@ class _ArtworkCommentImpl extends ArtworkComment {
     Object? parentId = _Undefined,
     Object? parent = _Undefined,
     Object? isDeleted = _Undefined,
+    Object? type = _Undefined,
   }) {
     return ArtworkComment(
       id: id is int? ? id : this.id,
@@ -279,6 +293,7 @@ class _ArtworkCommentImpl extends ArtworkComment {
       parentId: parentId is int? ? parentId : this.parentId,
       parent: parent is _i4.ArtworkComment? ? parent : this.parent?.copyWith(),
       isDeleted: isDeleted is bool? ? isDeleted : this.isDeleted,
+      type: type is _i5.CommentType? ? type : this.type,
     );
   }
 }
@@ -326,6 +341,11 @@ class ArtworkCommentTable extends _i1.Table<int?> {
       this,
       hasDefault: true,
     );
+    type = _i1.ColumnEnum(
+      'type',
+      this,
+      _i1.EnumSerialization.byIndex,
+    );
   }
 
   late final _i1.ColumnInt artworkId;
@@ -351,6 +371,8 @@ class ArtworkCommentTable extends _i1.Table<int?> {
   _i4.ArtworkCommentTable? _parent;
 
   late final _i1.ColumnBool isDeleted;
+
+  late final _i1.ColumnEnum<_i5.CommentType> type;
 
   _i2.ArtworkTable get artwork {
     if (_artwork != null) return _artwork!;
@@ -403,6 +425,7 @@ class ArtworkCommentTable extends _i1.Table<int?> {
         repliesCount,
         parentId,
         isDeleted,
+        type,
       ];
 
   @override

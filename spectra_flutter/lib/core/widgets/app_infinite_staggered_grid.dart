@@ -15,6 +15,10 @@ class AppInfiniteStaggeredGrid<T> extends StatelessWidget {
     this.showRefresh = true,
     this.shrinkWrap = false,
     this.scrollController,
+    this.physics,
+    this.noItemsFound,
+    this.firstPageLoading,
+    this.firstPageError,
   });
 
   final VoidCallback onRefresh;
@@ -25,6 +29,10 @@ class AppInfiniteStaggeredGrid<T> extends StatelessWidget {
   final bool showRefresh;
   final bool shrinkWrap;
   final ScrollController? scrollController;
+  final ScrollPhysics? physics;
+  final Widget? noItemsFound;
+  final Widget? firstPageLoading;
+  final Widget? firstPageError;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +47,8 @@ class AppInfiniteStaggeredGrid<T> extends StatelessWidget {
           state: state,
           scrollController: scrollController,
           fetchNextPage: fetchNextPage,
+          shrinkWrap: shrinkWrap,
+          physics: physics,
           showNewPageErrorIndicatorAsGridChild: false,
           showNewPageProgressIndicatorAsGridChild: false,
           showNoMoreItemsIndicatorAsGridChild: false,
@@ -62,102 +72,110 @@ class AppInfiniteStaggeredGrid<T> extends StatelessWidget {
               );
             },
             noItemsFoundIndicatorBuilder: (context) {
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 15, 70),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 5,
-                  children: [
-                    Text(
-                      'Nothing Here.',
-                      style:
-                          Theme.of(context).textTheme.headlineLarge!.copyWith(
+              return noItemsFound ??
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 70),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 5,
+                      children: [
+                        Text(
+                          'Nothing Here.',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge!
+                              .copyWith(
                                 color: Theme.of(context).hintColor,
                                 fontSize: 30,
                               ),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      "We've searched far and wide, but we couldn't find any results.",
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: Theme.of(context).hintColor,
-                          ),
-                      textAlign: TextAlign.center,
-                    ),
-                    if (canUpload)
-                      SizedBox(
-                        height: 5,
-                      ),
-                    if (canUpload)
-                      SizedBox(
-                        height: 55,
-                        child: FilledButton(
-                          onPressed: () {
-                            context.push('/home/upload');
-                          },
-                          child: Text(
-                            'Upload your art',
-                          ),
-                        ).withLoading(
-                          loading: false,
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                  ],
-                ),
-              );
+                        Text(
+                          "We've searched far and wide, but we couldn't find any results.",
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                          textAlign: TextAlign.center,
+                        ),
+                        if (canUpload)
+                          SizedBox(
+                            height: 5,
+                          ),
+                        if (canUpload)
+                          SizedBox(
+                            height: 55,
+                            child: FilledButton(
+                              onPressed: () {
+                                context.push('/artworks/upload');
+                              },
+                              child: Text(
+                                'Upload your art',
+                              ),
+                            ).withLoading(
+                              loading: false,
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
             },
             firstPageErrorIndicatorBuilder: (context) {
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 15, 82),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  spacing: 10,
-                  children: [
-                    Text(
-                      'OOPS!',
-                      style:
-                          Theme.of(context).textTheme.headlineLarge!.copyWith(
+              return firstPageError ??
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 82),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      spacing: 10,
+                      children: [
+                        Text(
+                          'OOPS!',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge!
+                              .copyWith(
                                 color: Theme.of(context).hintColor,
                                 fontSize: 30,
                               ),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      errorMessage ??
-                          'Something went wrong while fetching the requested data. Please try again.',
-                      style: TextStyle(
-                        color: Theme.of(context).hintColor,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    if (showRefresh)
-                      SizedBox(
-                        height: 1,
-                      ),
-                    if (showRefresh)
-                      SizedBox(
-                        width: 250,
-                        child: FilledButton(
-                          onPressed: onRefresh,
-                          child: Text(
-                            'Retry',
-                          ),
-                        ).withLoading(
-                          loading: false,
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                  ],
-                ),
-              );
+                        Text(
+                          errorMessage ??
+                              'Something went wrong while fetching the requested data. Please try again.',
+                          style: TextStyle(
+                            color: Theme.of(context).hintColor,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        if (showRefresh)
+                          SizedBox(
+                            height: 1,
+                          ),
+                        if (showRefresh)
+                          SizedBox(
+                            width: 250,
+                            child: FilledButton(
+                              onPressed: onRefresh,
+                              child: Text(
+                                'Retry',
+                              ),
+                            ).withLoading(
+                              loading: false,
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
             },
             firstPageProgressIndicatorBuilder: (context) {
-              return Center(
-                child: LoadingAnimationWidget.discreteCircle(
-                  color: TColors.primary,
-                  size: 70,
-                ),
-              );
+              return firstPageLoading ??
+                  Center(
+                    child: LoadingAnimationWidget.discreteCircle(
+                      color: TColors.primary,
+                      size: 70,
+                    ),
+                  );
             },
             noMoreItemsIndicatorBuilder: (context) {
               return const SizedBox();

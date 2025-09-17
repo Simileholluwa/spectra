@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spectra_client/spectra_client.dart';
-import 'package:spectra_flutter/features/home/home.dart';
+import 'package:spectra_flutter/features/artwork/artwork.dart';
 import 'package:spectra_flutter/features/upload/upload.dart';
 
 Future<dynamic> showMediaFullSize(
