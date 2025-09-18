@@ -325,11 +325,11 @@ class EndpointUser extends _i1.EndpointRef {
         {'user': user},
       );
 
-  _i2.Future<_i16.User?> getUser(String? userId) =>
+  _i2.Future<_i16.User?> getUser(String username) =>
       caller.callServerEndpoint<_i16.User?>(
         'user',
         'getUser',
-        {'userId': userId},
+        {'username': username},
       );
 
   _i2.Future<String?> checkIfNewUser(String email) =>
@@ -344,6 +344,59 @@ class EndpointUser extends _i1.EndpointRef {
         'user',
         'checkValidUsername',
         {'username': username},
+      );
+
+  _i2.Future<_i3.ArtworkList> getUserArtworks(
+    String username, {
+    required int limit,
+    required int page,
+    required String sortBy,
+    required bool sortDescending,
+  }) =>
+      caller.callServerEndpoint<_i3.ArtworkList>(
+        'user',
+        'getUserArtworks',
+        {
+          'username': username,
+          'limit': limit,
+          'page': page,
+          'sortBy': sortBy,
+          'sortDescending': sortDescending,
+        },
+      );
+
+  _i2.Future<_i3.ArtworkList> getUserLikedArtworks(
+    String username, {
+    required int limit,
+    required int page,
+    required bool sortDescending,
+  }) =>
+      caller.callServerEndpoint<_i3.ArtworkList>(
+        'user',
+        'getUserLikedArtworks',
+        {
+          'username': username,
+          'limit': limit,
+          'page': page,
+          'sortDescending': sortDescending,
+        },
+      );
+
+  _i2.Future<_i3.ArtworkList> getUserDownloadedArtworks(
+    String username, {
+    required int limit,
+    required int page,
+    required bool sortDescending,
+  }) =>
+      caller.callServerEndpoint<_i3.ArtworkList>(
+        'user',
+        'getUserDownloadedArtworks',
+        {
+          'username': username,
+          'limit': limit,
+          'page': page,
+          'sortDescending': sortDescending,
+        },
       );
 }
 

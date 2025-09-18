@@ -10,7 +10,8 @@ part 'artwork_screen_provider.g.dart';
 class ArtworkScreenNotifier extends _$ArtworkScreenNotifier {
   @override
   ArtworkScreenState build() {
-    return ArtworkScreenState.initial();
+    final screenState = ArtworkScreenState.initial();
+    return screenState;
   }
 
   void setArtworkFilter() {
@@ -48,6 +49,12 @@ class ArtworkScreenNotifier extends _$ArtworkScreenNotifier {
             (name) => name != tagName,
           )
           .toList(),
+    );
+  }
+
+  void setUserImageUrl(String imageUrl) {
+    state = state.copyWith(
+      userImageUrl: imageUrl,
     );
   }
 

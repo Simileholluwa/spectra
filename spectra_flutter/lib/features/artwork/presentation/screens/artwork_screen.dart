@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:spectra_flutter/core/core.dart';
 import 'package:spectra_flutter/features/artwork/artwork.dart';
 
@@ -29,35 +30,12 @@ class ArtworkScreen extends ConsumerWidget {
         homeState.sortDescending,
       ).notifier,
     );
+    final user = ref.watch(sessionProvider).signedInUser;
+    final imageUrl = user?.imageUrl;
+    final username = user?.userName;
     return AppAndroidBottomNav(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        // floatingActionButton: AnimatedCrossFade(
-        //   secondChild: const SizedBox.shrink(),
-        //   duration: const Duration(milliseconds: 300),
-        //   crossFadeState: homeState.canScroll
-        //       ? CrossFadeState.showFirst
-        //       : CrossFadeState.showSecond,
-        //   firstChild: GestureDetector(
-        //     onTap: () => homeNotifier.scrollToTop(),
-        //     child: Container(
-        //       height: 50,
-        //       width: 50,
-        //       decoration: BoxDecoration(
-        //         color: Theme.of(context).primaryColor,
-        //         borderRadius: BorderRadius.circular(
-        //           100,
-        //         ),
-        //       ),
-        //       child: Icon(
-        //         Icons.keyboard_arrow_up_rounded,
-        //         color: Colors.white,
-        //         size: 40,
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         appBar: AppBar(
           toolbarHeight: uploadProgressState.idle == false ? 50 : 0,
           title: AnimatedSwitcher(
@@ -82,11 +60,12 @@ class ArtworkScreen extends ConsumerWidget {
             SliverAppBar(
               floating: true,
               snap: true,
-              title: Text(
-                'ARTS',
-                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                      fontSize: 35,
-                    ),
+              title: GestureDetector(
+                onTap: () => context.push('/$username'),
+                child: AppUserProfileImage(
+                  imageUrl: imageUrl ?? '',
+                  radius: 22,
+                ),
               ),
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(5),

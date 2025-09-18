@@ -19,6 +19,7 @@ class AppInfiniteStaggeredGrid<T> extends StatelessWidget {
     this.noItemsFound,
     this.firstPageLoading,
     this.firstPageError,
+    this.padding,
   });
 
   final VoidCallback onRefresh;
@@ -33,6 +34,7 @@ class AppInfiniteStaggeredGrid<T> extends StatelessWidget {
   final Widget? noItemsFound;
   final Widget? firstPageLoading;
   final Widget? firstPageError;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +47,7 @@ class AppInfiniteStaggeredGrid<T> extends StatelessWidget {
           mainAxisSpacing: 8,
           crossAxisCount: 2,
           state: state,
+          padding: padding,
           scrollController: scrollController,
           fetchNextPage: fetchNextPage,
           shrinkWrap: shrinkWrap,

@@ -55,7 +55,6 @@ export 'domain/usecases/add_reply_usecase.dart';
 export 'presentation/providers/artwork_comment_interaction_provider.dart';
 export 'presentation/state/artwork_comment_interaction_state.dart';
 export 'domain/usecases/delete_comment_usecase.dart';
-export 'presentation/providers/artwork_stream_provider.dart';
 export 'presentation/widgets/comment_content_root.dart';
 export 'presentation/screens/artwork_replies_screen.dart';
 export 'presentation/routes/art_routes.dart';

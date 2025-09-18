@@ -26,6 +26,7 @@ class CommentTreeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final username = rootComment.comment.owner!.username!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -48,7 +49,7 @@ class CommentTreeWidget extends StatelessWidget {
                   onTap: () async {
                     if (context.mounted) {
                       context.push(
-                        '/artworks/$artworkId/comment/$commentId/replies',
+                        '/$username/arts/$artworkId/comment/$commentId/replies',
                         extra: rootComment,
                       );
                     }

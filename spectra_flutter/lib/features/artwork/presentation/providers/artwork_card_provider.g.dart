@@ -7,7 +7,7 @@ part of 'artwork_card_provider.dart';
 // **************************************************************************
 
 String _$artworkCardNotifierHash() =>
-    r'd14eab14b0328a4d6ea27bace54769886b53e30b';
+    r'402c87458ab724fdf18911fa5a1992bbddb2a75c';
 
 /// Copied from Dart SDK
 class _SystemHash {

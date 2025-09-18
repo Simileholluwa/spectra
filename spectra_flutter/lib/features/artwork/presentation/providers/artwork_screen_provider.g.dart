@@ -7,7 +7,7 @@ part of 'artwork_screen_provider.dart';
 // **************************************************************************
 
 String _$artworkScreenNotifierHash() =>
-    r'5baa9ebb551cc4133a87f9e0d9e8cf2eb9330e76';
+    r'c72b1161df96982f5120577d046fbf3ac3aa846c';
 
 /// See also [ArtworkScreenNotifier].
 @ProviderFor(ArtworkScreenNotifier)

@@ -200,27 +200,20 @@ class ArtworkRepliesScreen extends ConsumerWidget {
                     ),
                   ),
                   itemBuilder: (context, comment, index) {
-                    final commentUpdates = ref.watch(
-                      artworkCommentUpdateStreamProvider(
-                        comment.comment.id!,
+                    final commentState = ref.watch(
+                      artworkCommentInteractionNotifierProvider(
+                        comment,
                       ),
                     );
-                    var likes = comment.comment.likesCount!;
-                    var replies = comment.comment.repliesCount!;
-                    if (!commentUpdates.hasError &&
-                        commentUpdates.value != null) {
-                      likes = commentUpdates.value!.likes;
-                      replies = commentUpdates.value!.repliesCount;
-                    }
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                       child: CommentTreeWidget(
                         comment,
-                        replies != 0,
+                        commentState.repliesCount != 0,
                         commentId: comment.comment.id!,
                         index: index,
                         artworkId: artworkId,
-                        repliesCount: replies,
+                        repliesCount: commentState.repliesCount,
                         contentRoot: (context, comment) {
                           return CommentContentRoot(
                             index: index,
@@ -228,7 +221,7 @@ class ArtworkRepliesScreen extends ConsumerWidget {
                             username: comment.comment.owner?.username ?? '',
                             artworkId: artworkId,
                             commentList: notifier,
-                            likes: likes,
+                            likes: commentState.likesCount,
                           );
                         },
                       ),

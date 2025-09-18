@@ -138,7 +138,7 @@ class CommentContentRoot extends ConsumerWidget {
                     ),
                   ],
                 ),
-                if (state.isOwner)
+                if (!state.isOwner)
                   GestureDetector(
                     onTap: () async {
                       final res = await deleteCommentDialog(

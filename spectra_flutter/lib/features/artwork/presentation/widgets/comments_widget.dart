@@ -14,8 +14,8 @@ class CommentsWidget extends ConsumerWidget {
     required this.imageUrl,
   });
 
-  final int artworkId;
   final int commentCount;
+  final int artworkId;
   final String imageUrl;
 
   @override
@@ -28,15 +28,6 @@ class CommentsWidget extends ConsumerWidget {
         true,
       ),
     );
-    final artworkUpdates = ref.watch(
-      artworkUpdateStreamProvider(
-        artworkId,
-      ),
-    );
-    var count = commentCount;
-    if (!artworkUpdates.hasError && artworkUpdates.value != null) {
-      count = artworkUpdates.value!.commentsCount;
-    }
     final notifier = ref.watch(
       paginatedArtworkCommentListProvider(
         artworkId,
@@ -50,7 +41,7 @@ class CommentsWidget extends ConsumerWidget {
       spacing: 10,
       children: [
         Text(
-          '${count == 0 ? '' : '$count'} ${count == 1 ? 'Comment' : 'Comments'}',
+          '${commentCount == 0 ? '' : '$commentCount'} ${commentCount == 1 ? 'Comment' : 'Comments'}',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         Column(
@@ -75,7 +66,7 @@ class CommentsWidget extends ConsumerWidget {
                 );
               },
             ),
-            if (count != 0) const SizedBox(height: 10),
+            if (commentCount != 0) const SizedBox(height: 10),
             CommentsList(
               state: state,
               artworkId: artworkId,
@@ -157,24 +148,18 @@ class CommentsList extends StatelessWidget {
       ),
       itemBuilder: (context, comment, index) {
         return Consumer(builder: (context, ref, child) {
-          final commentUpdates = ref.watch(
-            artworkCommentUpdateStreamProvider(
-              comment.comment.id!,
+          final commentState = ref.watch(
+            artworkCommentInteractionNotifierProvider(
+              comment,
             ),
           );
-          var likes = comment.comment.likesCount!;
-          var replies = comment.comment.repliesCount!;
-          if (!commentUpdates.hasError && commentUpdates.value != null) {
-            likes = commentUpdates.value!.likes;
-            replies = commentUpdates.value!.repliesCount;
-          }
           return CommentTreeWidget(
             comment,
-            replies != 0,
+            commentState.repliesCount != 0,
             commentId: comment.comment.id!,
             index: index,
             artworkId: artworkId,
-            repliesCount: replies,
+            repliesCount: commentState.repliesCount,
             contentRoot: (context, comment) {
               return CommentContentRoot(
                 index: index,
@@ -182,7 +167,7 @@ class CommentsList extends StatelessWidget {
                 username: comment.comment.owner!.username ?? '',
                 artworkId: artworkId,
                 commentList: notifier,
-                likes: likes,
+                likes: commentState.likesCount,
               );
             },
           );

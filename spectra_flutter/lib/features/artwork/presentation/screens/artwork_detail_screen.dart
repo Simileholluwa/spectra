@@ -90,6 +90,11 @@ class ArworkDetailScreen extends ConsumerWidget {
         body: data.when(
           data: (data) {
             final artwork = data.artwork;
+            final artworkState = ref.watch(
+              artworkCardNotifierProvider(
+                data,
+              ),
+            );
             return RefreshIndicator(
               onRefresh: () => Future.sync(
                 () => ref.invalidate(getArtworkProvider),
@@ -128,7 +133,7 @@ class ArworkDetailScreen extends ConsumerWidget {
                                       artworkState: data,
                                     ),
                           ArtworkInteractionDetails(
-                            artwork: artwork,
+                            artworkState: data,
                           ),
                           const Divider(
                             height: 0,
@@ -161,7 +166,7 @@ class ArworkDetailScreen extends ConsumerWidget {
                             padding: const EdgeInsets.only(top: 5),
                             child: CommentsWidget(
                               artworkId: artworkId,
-                              commentCount: artwork.commentsCount!,
+                              commentCount: artworkState.commentsCount,
                               imageUrl: artwork.user!.user!.imageUrl ?? '',
                             ),
                           ),

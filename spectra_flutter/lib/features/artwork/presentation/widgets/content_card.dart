@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:spectra_client/spectra_client.dart';
 import 'package:spectra_flutter/core/core.dart';
 import 'package:spectra_flutter/features/artwork/artwork.dart';
@@ -87,7 +88,11 @@ class ContentCard extends ConsumerWidget {
                 icon: AppUserProfileImage(
                   imageUrl: artwork.user?.user?.imageUrl ?? '',
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  context.push(
+                    '/${artwork.user?.username}',
+                  );
+                },
               ),
               SizedBox(
                 width: 20,

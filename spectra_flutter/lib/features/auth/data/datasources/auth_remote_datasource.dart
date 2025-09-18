@@ -180,7 +180,7 @@ class AuthRemoteDatabaseImpl implements AuthRemoteDatabase {
 
       await _sessionManager.refreshSession();
 
-      final user = await _client.user.getUser(null);
+      final user = await _client.user.getUser(result.userInfo!.userName!);
       if (user == null) {
         throw const ServerException(
           message: 'User record not found',
@@ -364,10 +364,10 @@ class AuthRemoteDatabaseImpl implements AuthRemoteDatabase {
       );
     }
   }
-  
+
   @override
   Future<bool> checkValidUsername({required String username}) async {
-     try {
+    try {
       final result = await _client.user.checkValidUsername(
         username,
       );

@@ -397,6 +397,11 @@ class ArtworkEndpoint extends Endpoint {
         user: User.include(
           user: UserInfo.include(),
         ),
+        tags: ArtworkTags.includeList(
+          include: ArtworkTags.include(
+            tag: Tag.include(),
+          ),
+        ),
       ),
     );
     if (artwork == null) {

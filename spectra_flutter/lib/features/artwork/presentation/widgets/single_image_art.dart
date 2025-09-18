@@ -33,7 +33,7 @@ class SingleImageArt extends ConsumerWidget {
           ),
         );
         context.push(
-          '/artworks/${artwork.id}',
+          '/${artworkState.artwork.user!.username}/arts/${artwork.id}',
           extra: artworkState,
         );
       },

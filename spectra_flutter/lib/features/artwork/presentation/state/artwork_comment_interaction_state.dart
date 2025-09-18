@@ -31,12 +31,12 @@ class ArtworkCommentInteractionState {
     ArtworkCommentWithUserState? comment,
     Ref ref,
   ) {
+    final userId = ref.read(localStorageProvider).getInt('userId');
     return ArtworkCommentInteractionState(
       isLiked: comment?.isLiked ?? false,
       likesCount: comment?.comment.likesCount ?? 0,
       repliesCount: comment?.comment.repliesCount ?? 0,
-      isOwner: comment?.comment.owner!.id ==
-          ref.read(localStorageProvider).getInt('userId'),
+      isOwner: comment?.comment.ownerId == userId,
     );
   }
 }

@@ -679,10 +679,10 @@ class Endpoints extends _i1.EndpointDispatch {
         'getUser': _i1.MethodConnector(
           name: 'getUser',
           params: {
-            'userId': _i1.ParameterDescription(
-              name: 'userId',
-              type: _i1.getType<String?>(),
-              nullable: true,
+            'username': _i1.ParameterDescription(
+              name: 'username',
+              type: _i1.getType<String>(),
+              nullable: false,
             )
           },
           call: (
@@ -691,7 +691,7 @@ class Endpoints extends _i1.EndpointDispatch {
           ) async =>
               (endpoints['user'] as _i6.UserEndpoint).getUser(
             session,
-            params['userId'],
+            params['username'],
           ),
         ),
         'checkIfNewUser': _i1.MethodConnector(
@@ -728,6 +728,120 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['user'] as _i6.UserEndpoint).checkValidUsername(
             session,
             params['username'],
+          ),
+        ),
+        'getUserArtworks': _i1.MethodConnector(
+          name: 'getUserArtworks',
+          params: {
+            'username': _i1.ParameterDescription(
+              name: 'username',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'page': _i1.ParameterDescription(
+              name: 'page',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'sortBy': _i1.ParameterDescription(
+              name: 'sortBy',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'sortDescending': _i1.ParameterDescription(
+              name: 'sortDescending',
+              type: _i1.getType<bool>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['user'] as _i6.UserEndpoint).getUserArtworks(
+            session,
+            params['username'],
+            limit: params['limit'],
+            page: params['page'],
+            sortBy: params['sortBy'],
+            sortDescending: params['sortDescending'],
+          ),
+        ),
+        'getUserLikedArtworks': _i1.MethodConnector(
+          name: 'getUserLikedArtworks',
+          params: {
+            'username': _i1.ParameterDescription(
+              name: 'username',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'page': _i1.ParameterDescription(
+              name: 'page',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'sortDescending': _i1.ParameterDescription(
+              name: 'sortDescending',
+              type: _i1.getType<bool>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['user'] as _i6.UserEndpoint).getUserLikedArtworks(
+            session,
+            params['username'],
+            limit: params['limit'],
+            page: params['page'],
+            sortDescending: params['sortDescending'],
+          ),
+        ),
+        'getUserDownloadedArtworks': _i1.MethodConnector(
+          name: 'getUserDownloadedArtworks',
+          params: {
+            'username': _i1.ParameterDescription(
+              name: 'username',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'page': _i1.ParameterDescription(
+              name: 'page',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'sortDescending': _i1.ParameterDescription(
+              name: 'sortDescending',
+              type: _i1.getType<bool>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['user'] as _i6.UserEndpoint).getUserDownloadedArtworks(
+            session,
+            params['username'],
+            limit: params['limit'],
+            page: params['page'],
+            sortDescending: params['sortDescending'],
           ),
         ),
       },

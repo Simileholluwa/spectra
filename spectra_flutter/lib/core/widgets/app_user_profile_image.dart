@@ -7,10 +7,12 @@ class AppUserProfileImage extends StatelessWidget {
     super.key,
     required this.imageUrl,
     this.radius = 17,
+    this.iconSize = 20,
   });
 
   final String imageUrl;
   final double radius;
+  final double iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +22,9 @@ class AppUserProfileImage extends StatelessWidget {
         imageUrl: imageUrl,
         fit: BoxFit.cover,
         errorWidget: (_, __, ___) {
-          return const Icon(
+          return Icon(
             Iconsax.user,
-            size: 20,
+            size: iconSize,
           );
         },
       ),

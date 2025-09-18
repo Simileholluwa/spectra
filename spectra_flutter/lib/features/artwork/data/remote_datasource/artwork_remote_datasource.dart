@@ -91,6 +91,10 @@ class ArtworkRemoteDatasourceImpl implements ArtworkRemoteDatasource {
         sortDescending: sortDescending,
       );
       return response;
+    } on ServerSideException catch (e) {
+      throw ServerException(
+        message: e.message,
+      );
     } catch (e) {
       throw ServerException(
         message: e.toString(),
@@ -115,6 +119,10 @@ class ArtworkRemoteDatasourceImpl implements ArtworkRemoteDatasource {
         page: page,
       );
       return response;
+    } on ServerSideException catch (e) {
+      throw ServerException(
+        message: e.message,
+      );
     } catch (e) {
       throw ServerException(
         message: e.toString(),
@@ -173,7 +181,7 @@ class ArtworkRemoteDatasourceImpl implements ArtworkRemoteDatasource {
       );
       return response;
     } on ServerSideException catch (e) {
-      throw ServerException(message: e.toString());
+      throw ServerException(message: e.message);
     } catch (e) {
       throw ServerException(message: e.toString());
     }
@@ -197,7 +205,7 @@ class ArtworkRemoteDatasourceImpl implements ArtworkRemoteDatasource {
       );
       return response;
     } on ServerSideException catch (e) {
-      throw ServerException(message: e.toString());
+      throw ServerException(message: e.message);
     } catch (e) {
       throw ServerException(message: e.toString());
     }
@@ -209,7 +217,7 @@ class ArtworkRemoteDatasourceImpl implements ArtworkRemoteDatasource {
       final response = await _client.artwork.getArtwork(artworkId);
       return response;
     } on ServerSideException catch (e) {
-      throw ServerException(message: e.toString());
+      throw ServerException(message: e.message);
     } catch (e) {
       throw ServerException(message: e.toString());
     }
@@ -221,7 +229,7 @@ class ArtworkRemoteDatasourceImpl implements ArtworkRemoteDatasource {
       final response = await _client.artwork.addComment(comment);
       return response;
     } on ServerSideException catch (e) {
-      throw ServerException(message: e.toString());
+      throw ServerException(message: e.message);
     } catch (e) {
       throw ServerException(message: e.toString());
     }
@@ -247,7 +255,7 @@ class ArtworkRemoteDatasourceImpl implements ArtworkRemoteDatasource {
       );
       return response;
     } on ServerSideException catch (e) {
-      throw ServerException(message: e.toString());
+      throw ServerException(message: e.message);
     } catch (e) {
       throw ServerException(message: e.toString());
     }
@@ -270,7 +278,7 @@ class ArtworkRemoteDatasourceImpl implements ArtworkRemoteDatasource {
       final response = await _client.artwork.addReply(reply);
       return response;
     } on ServerSideException catch (e) {
-      throw ServerException(message: e.toString());
+      throw ServerException(message: e.message);
     } catch (e) {
       throw ServerException(message: e.toString());
     }

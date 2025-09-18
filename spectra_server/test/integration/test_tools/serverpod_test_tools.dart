@@ -1010,7 +1010,7 @@ class _UserEndpoint {
 
   _i3.Future<_i17.User?> getUser(
     _i1.TestSessionBuilder sessionBuilder,
-    String? userId,
+    String username,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1023,7 +1023,7 @@ class _UserEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'user',
           methodName: 'getUser',
-          parameters: _i1.testObjectToJson({'userId': userId}),
+          parameters: _i1.testObjectToJson({'username': username}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue = await (_localCallContext.method.call(
@@ -1088,6 +1088,119 @@ class _UserEndpoint {
           _localUniqueSession,
           _localCallContext.arguments,
         ) as _i3.Future<bool>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i4.ArtworkList> getUserArtworks(
+    _i1.TestSessionBuilder sessionBuilder,
+    String username, {
+    required int limit,
+    required int page,
+    required String sortBy,
+    required bool sortDescending,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'user',
+        method: 'getUserArtworks',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'user',
+          methodName: 'getUserArtworks',
+          parameters: _i1.testObjectToJson({
+            'username': username,
+            'limit': limit,
+            'page': page,
+            'sortBy': sortBy,
+            'sortDescending': sortDescending,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i4.ArtworkList>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i4.ArtworkList> getUserLikedArtworks(
+    _i1.TestSessionBuilder sessionBuilder,
+    String username, {
+    required int limit,
+    required int page,
+    required bool sortDescending,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'user',
+        method: 'getUserLikedArtworks',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'user',
+          methodName: 'getUserLikedArtworks',
+          parameters: _i1.testObjectToJson({
+            'username': username,
+            'limit': limit,
+            'page': page,
+            'sortDescending': sortDescending,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i4.ArtworkList>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i4.ArtworkList> getUserDownloadedArtworks(
+    _i1.TestSessionBuilder sessionBuilder,
+    String username, {
+    required int limit,
+    required int page,
+    required bool sortDescending,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'user',
+        method: 'getUserDownloadedArtworks',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'user',
+          methodName: 'getUserDownloadedArtworks',
+          parameters: _i1.testObjectToJson({
+            'username': username,
+            'limit': limit,
+            'page': page,
+            'sortDescending': sortDescending,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i4.ArtworkList>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

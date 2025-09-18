@@ -19,6 +19,7 @@ class ArtworkScreenState {
   final String viewType;
   final String sortBy;
   final bool sortDescending;
+  final String userImageUrl;
 
   ArtworkScreenState({
     required this.filter,
@@ -36,6 +37,7 @@ class ArtworkScreenState {
     required this.viewType,
     required this.sortBy,
     required this.sortDescending,
+    required this.userImageUrl,
   });
 
   ArtworkScreenState copyWith({
@@ -54,6 +56,7 @@ class ArtworkScreenState {
     String? viewType,
     String? sortBy,
     bool? sortDescending,
+    String? userImageUrl,
   }) {
     return ArtworkScreenState(
       filter: filter ?? this.filter,
@@ -75,6 +78,7 @@ class ArtworkScreenState {
       viewType: viewType ?? this.viewType,
       sortBy: sortBy ?? this.sortBy,
       sortDescending: sortDescending ?? this.sortDescending,
+      userImageUrl: userImageUrl ?? this.userImageUrl,
     );
   }
 
@@ -94,6 +98,7 @@ class ArtworkScreenState {
         mediaType = null,
         viewType = 'list',
         sortBy = 'createdAt',
+        userImageUrl = '',
         sortDescending = true,
         endDate = null;
 }

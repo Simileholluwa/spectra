@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:spectra_client/spectra_client.dart';
 import 'package:spectra_flutter/core/core.dart';
 import 'package:spectra_flutter/features/auth/auth.dart';
 import 'package:spectra_flutter/features/artwork/artwork.dart';
@@ -15,7 +16,7 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 GoRouter router(Ref ref) {
   ref.watch(bootStrapProvider);
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '',
     navigatorKey: _rootNavigatorKey,
     routes: [
       GoRoute(
@@ -81,10 +82,40 @@ GoRouter router(Ref ref) {
         ],
       ),
       GoRoute(
-        path: '/user:id',
+        path: '/:username',
         builder: (context, state) => UserProfileScreen(
-          id: state.pathParameters['id'],
+          username: state.pathParameters['username']!,
         ),
+        routes: [
+          GoRoute(
+            path: 'arts/:artworkId',
+            builder: (context, state) {
+              final artworkState = state.extra as ArtworkWithUserState?;
+              return ArworkDetailScreen(
+                artworkId: int.parse(
+                  state.pathParameters['artworkId']!,
+                ),
+                artworkState: artworkState,
+              );
+            },
+            routes: [
+              GoRoute(
+                path: 'comment/:commentId/replies',
+                builder: (context, state) {
+                  return ArtworkRepliesScreen(
+                    artworkId: int.parse(
+                      state.pathParameters['artworkId']!,
+                    ),
+                    parentId: int.parse(
+                      state.pathParameters['commentId']!,
+                    ),
+                    comment: state.extra as ArtworkCommentWithUserState?,
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );

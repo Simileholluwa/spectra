@@ -8,27 +8,19 @@ import 'package:spectra_flutter/features/artwork/artwork.dart';
 class ArtworkInteractionDetails extends ConsumerWidget {
   const ArtworkInteractionDetails({
     super.key,
-    required this.artwork,
+    required this.artworkState,
   });
 
-  final Artwork artwork;
+  final ArtworkWithUserState artworkState;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final artwork = artworkState.artwork;
     final artworkUpdates = ref.watch(
-      artworkUpdateStreamProvider(
-        artwork.id!,
+      artworkCardNotifierProvider(
+        artworkState,
       ),
     );
-    var likes = artwork.likes!;
-    var downloads = artwork.downloads!;
-    var views = artwork.views!;
-
-    if (!artworkUpdates.hasError && artworkUpdates.value != null) {
-      likes = artworkUpdates.value!.likes;
-      downloads = artworkUpdates.value!.downloads;
-      views = artworkUpdates.value!.views;
-    }
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
@@ -39,18 +31,18 @@ class ArtworkInteractionDetails extends ConsumerWidget {
             children: [
               InteractionButtons(
                 icon: Iconsax.heart5,
-                title: '$likes',
+                title: '${artworkUpdates.likeCount}',
                 color: TColors.primary,
               ),
               if (artwork.allowDownload!)
                 InteractionButtons(
                   icon: Iconsax.document_download5,
-                  title: '$downloads',
+                  title: '${artworkUpdates.downloadsCount}',
                   color: Colors.indigo,
                 ),
               InteractionButtons(
                 icon: Iconsax.eye4,
-                title: '$views',
+                title: '${artworkUpdates.viewsCount}',
                 color: Colors.red,
               ),
             ],

@@ -16,7 +16,7 @@ class AppWrapper extends ConsumerWidget {
     final hideNav = ref.watch(hideNavBarProvider);
     final location =
         navigatorShell.shellRouteContext.routerState.uri.toString();
-    final hideBottom = location.contains('/artworks/') || hideNav;
+    final hideBottom = location.contains('/upload') || hideNav;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0,

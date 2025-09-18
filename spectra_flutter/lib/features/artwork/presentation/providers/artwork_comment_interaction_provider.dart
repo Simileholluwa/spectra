@@ -9,6 +9,7 @@ class ArtworkCommentInteractionNotifier
     extends _$ArtworkCommentInteractionNotifier {
   @override
   ArtworkCommentInteractionState build(ArtworkCommentWithUserState? comment) {
+    _listenToCommentChanges();
     return ArtworkCommentInteractionState.initial(comment, ref);
   }
 
@@ -28,6 +29,23 @@ class ArtworkCommentInteractionNotifier
     state = state.copyWith(
       repliesCount: repliesCount,
     );
+  }
+
+  void _listenToCommentChanges() {
+    ref
+        .read(clientProvider)
+        .artwork
+        .artworkCommentUpdates(
+          comment!.comment.id!,
+        )
+        .listen((commentUpdates) {
+      setLikeCount(
+        commentUpdates.likes,
+      );
+      setRepliesCount(
+        commentUpdates.repliesCount,
+      );
+    });
   }
 
   Future<void> likeComment(int commentId) async {

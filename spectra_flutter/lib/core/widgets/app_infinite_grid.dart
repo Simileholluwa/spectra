@@ -93,7 +93,7 @@ class AppInfiniteGrid<T> extends StatelessWidget {
                         height: 55,
                         child: FilledButton(
                           onPressed: () {
-                            context.push('/artworks/upload');
+                            context.push('/upload');
                           },
                           child: Text(
                             'Upload your art',

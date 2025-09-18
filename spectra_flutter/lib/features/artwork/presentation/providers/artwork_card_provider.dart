@@ -14,6 +14,7 @@ part 'artwork_card_provider.g.dart';
 class ArtworkCardNotifier extends _$ArtworkCardNotifier {
   @override
   ArtworkCardState build(ArtworkWithUserState? artworkState) {
+    _listenToArtworkChanges();
     return ArtworkCardState.initial(artworkState);
   }
 
@@ -103,8 +104,6 @@ class ArtworkCardNotifier extends _$ArtworkCardNotifier {
         quality: 60,
         name: url.split('/').last,
       );
-
-      state = state.copyWith(downloadProgress: 0.0);
       unawaited(
         updateDownloadsCount(
           artworkId,
@@ -141,7 +140,6 @@ class ArtworkCardNotifier extends _$ArtworkCardNotifier {
       await ImageGallerySaverPlus.saveFile(
         savePath,
       );
-      state = state.copyWith(downloadProgress: 0.0);
       unawaited(
         updateDownloadsCount(
           artworkId,
@@ -156,5 +154,50 @@ class ArtworkCardNotifier extends _$ArtworkCardNotifier {
         e.toString(),
       );
     }
+  }
+
+  void setLikesCount(int likesCount) {
+    state = state.copyWith(
+      likeCount: likesCount,
+    );
+  }
+
+  void setDownloadsCount(int downloadsCount) {
+    state = state.copyWith(
+      downloadsCount: downloadsCount,
+    );
+  }
+
+  void setViewsCount(int viewsCount) {
+    state = state.copyWith(
+      viewsCount: viewsCount,
+    );
+  }
+
+  void setCommentsCount(int commentsCount) {
+    state = state.copyWith(
+      commentsCount: commentsCount,
+    );
+  }
+
+  void _listenToArtworkChanges() {
+    ref
+        .read(clientProvider)
+        .artwork
+        .artworkUpdates(artworkState!.artwork.id!)
+        .listen((artworkUpdates) {
+      setLikesCount(
+        artworkUpdates.likes,
+      );
+      setDownloadsCount(
+        artworkUpdates.downloads,
+      );
+      setViewsCount(
+        artworkUpdates.views,
+      );
+      setCommentsCount(
+        artworkUpdates.commentsCount,
+      );
+    });
   }
 }

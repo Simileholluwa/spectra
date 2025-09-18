@@ -7,7 +7,7 @@ part of 'artwork_comment_interaction_provider.dart';
 // **************************************************************************
 
 String _$artworkCommentInteractionNotifierHash() =>
-    r'f42806926fb73061d1ca8366352656343bc16953';
+    r'c79265c3c7f36a07ccfce208375876acaa91f3aa';
 
 /// Copied from Dart SDK
 class _SystemHash {

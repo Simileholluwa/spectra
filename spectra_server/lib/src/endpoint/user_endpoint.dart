@@ -17,30 +17,17 @@ class UserEndpoint extends Endpoint {
 
   Future<User?> getUser(
     Session session,
-    String? userId,
+    String username,
   ) async {
-    // Fetch the authenticated user
-    final intUserId = int.tryParse(userId ?? '');
-    int? id;
-    if (intUserId == null) {
-      final authInfo = await session.authenticated;
-      if (authInfo == null) return null;
-      id = authInfo.userId;
-    } else {
-      id = intUserId;
-    }
-
-    // Fetch the user record from the local database
-    var cacheKey = 'UserData-$id';
+    var cacheKey = 'UserData-$username';
     var user = await session.caches.localPrio.get<User>(
       cacheKey,
     );
 
-    // If the user record is not in the cache, fetch it from the database
     if (user == null) {
       user = await User.db.findFirstRow(
         session,
-        where: (row) => row.id.equals(id),
+        where: (row) => row.username.equals(username),
         include: User.include(
           user: UserInfo.include(),
         ),
@@ -80,5 +67,260 @@ class UserEndpoint extends Endpoint {
     );
 
     return user == null;
+  }
+
+  Future<ArtworkList> getUserArtworks(
+    Session session,
+    String username, {
+    int limit = 50,
+    int page = 1,
+    String sortBy = 'createdAt',
+    bool sortDescending = true,
+  }) async {
+    final count = await Artwork.db.count(
+      session,
+      where: (row) =>
+          row.mediaType.notEquals(null) & row.user.username.equals(username),
+    );
+
+    final results = await Artwork.db.find(
+      session,
+      limit: limit,
+      offset: (page - 1) * limit,
+      include: Artwork.include(
+        user: User.include(
+          user: UserInfo.include(),
+        ),
+        tags: ArtworkTags.includeList(
+          include: ArtworkTags.include(
+            tag: Tag.include(),
+          ),
+        ),
+      ),
+      where: (row) =>
+          row.mediaType.notEquals(null) & row.user.username.equals(username),
+      orderBy: (row) {
+        switch (sortBy) {
+          case 'likes':
+            return row.likes;
+          case 'views':
+            return row.views;
+          case 'downloads':
+            return row.downloads;
+          case 'createdAt':
+          default:
+            return row.createdAt;
+        }
+      },
+      orderDescending: sortDescending,
+    );
+
+    final user = await session.authenticated;
+    final userId = user?.userId;
+    Set<int> likedIds = {};
+    Set<int> downloadedIds = {};
+
+    if (userId != null && results.isNotEmpty) {
+      final artworkIds = results.map((a) => a.id!).toList();
+      final userLikes = await ArtworkLikes.db.find(
+        session,
+        where: (t) =>
+            t.likedById.equals(userId) &
+            t.artworkId.inSet(
+              artworkIds.toSet(),
+            ),
+      );
+
+      final userDownloads = await ArtworkDownloads.db.find(
+        session,
+        where: (t) =>
+            t.downloadedById.equals(userId) &
+            t.artworkId.inSet(
+              artworkIds.toSet(),
+            ),
+      );
+
+      likedIds = userLikes.map((l) => l.artworkId).toSet();
+      downloadedIds = userDownloads.map((d) => d.artworkId).toSet();
+    }
+
+    final enrichedResults = results.map((a) {
+      return ArtworkWithUserState(
+        artwork: a,
+        isLiked: likedIds.contains(a.id),
+        isDownloaded: downloadedIds.contains(a.id),
+      );
+    }).toList();
+
+    return ArtworkList(
+      results: enrichedResults,
+      limit: limit,
+      count: count,
+      page: page,
+      numPages: (count / limit).ceil(),
+      canLoadMore: page * limit < count,
+    );
+  }
+
+  Future<ArtworkList> getUserLikedArtworks(
+    Session session,
+    String username, {
+    int limit = 50,
+    int page = 1,
+    bool sortDescending = true,
+  }) async {
+    final count = await ArtworkLikes.db.count(
+      session,
+      where: (row) => row.likedBy.username.equals(username),
+    );
+
+    final likeResults = await ArtworkLikes.db.find(
+      session,
+      limit: limit,
+      offset: (page - 1) * limit,
+      include: ArtworkLikes.include(
+        artwork: Artwork.include(
+          user: User.include(
+            user: UserInfo.include(),
+          ),
+          tags: ArtworkTags.includeList(
+            include: ArtworkTags.include(
+              tag: Tag.include(),
+            ),
+          ),
+        ),
+      ),
+      where: (row) => row.likedBy.username.equals(username),
+      orderBy: (row) => row.dateCreated,
+      orderDescending: sortDescending,
+    );
+
+    final results = likeResults.map((l) => l.artwork!).toList();
+    final user = await session.authenticated;
+    final userId = user?.userId;
+    Set<int> likedIds = {};
+    Set<int> downloadedIds = {};
+
+    if (userId != null && results.isNotEmpty) {
+      final artworkIds = results.map((a) => a.id!).toList();
+      final userLikes = await ArtworkLikes.db.find(
+        session,
+        where: (t) =>
+            t.likedById.equals(userId) &
+            t.artworkId.inSet(
+              artworkIds.toSet(),
+            ),
+      );
+
+      final userDownloads = await ArtworkDownloads.db.find(
+        session,
+        where: (t) =>
+            t.downloadedById.equals(userId) &
+            t.artworkId.inSet(
+              artworkIds.toSet(),
+            ),
+      );
+
+      likedIds = userLikes.map((l) => l.artworkId).toSet();
+      downloadedIds = userDownloads.map((d) => d.artworkId).toSet();
+    }
+
+    final enrichedResults = results.map((a) {
+      return ArtworkWithUserState(
+        artwork: a,
+        isLiked: likedIds.contains(a.id),
+        isDownloaded: downloadedIds.contains(a.id),
+      );
+    }).toList();
+
+    return ArtworkList(
+      results: enrichedResults,
+      limit: limit,
+      count: count,
+      page: page,
+      numPages: (count / limit).ceil(),
+      canLoadMore: page * limit < count,
+    );
+  }
+
+  Future<ArtworkList> getUserDownloadedArtworks(
+    Session session,
+    String username, {
+    int limit = 50,
+    int page = 1,
+    bool sortDescending = true,
+  }) async {
+    final count = await ArtworkDownloads.db.count(
+      session,
+      where: (row) => row.downloadedBy.username.equals(username),
+    );
+
+    final downloadResults = await ArtworkDownloads.db.find(
+      session,
+      limit: limit,
+      offset: (page - 1) * limit,
+      include: ArtworkDownloads.include(
+        artwork: Artwork.include(
+          user: User.include(
+            user: UserInfo.include(),
+          ),
+          tags: ArtworkTags.includeList(
+            include: ArtworkTags.include(
+              tag: Tag.include(),
+            ),
+          ),
+        ),
+      ),
+      where: (row) => row.downloadedBy.username.equals(username),
+      orderBy: (row) => row.dateCreated,
+      orderDescending: sortDescending,
+    );
+
+    final results = downloadResults.map((l) => l.artwork!).toList();
+    final user = await session.authenticated;
+    final userId = user?.userId;
+    Set<int> likedIds = {};
+    Set<int> downloadedIds = {};
+
+    if (userId != null && results.isNotEmpty) {
+      final artworkIds = results.map((a) => a.id!).toList();
+      final userLikes = await ArtworkLikes.db.find(
+        session,
+        where: (t) =>
+            t.likedById.equals(userId) &
+            t.artworkId.inSet(
+              artworkIds.toSet(),
+            ),
+      );
+
+      final userDownloads = await ArtworkDownloads.db.find(
+        session,
+        where: (t) =>
+            t.downloadedById.equals(userId) &
+            t.artworkId.inSet(
+              artworkIds.toSet(),
+            ),
+      );
+
+      likedIds = userLikes.map((l) => l.artworkId).toSet();
+      downloadedIds = userDownloads.map((d) => d.artworkId).toSet();
+    }
+
+    final enrichedResults = results.map((a) {
+      return ArtworkWithUserState(
+        artwork: a,
+        isLiked: likedIds.contains(a.id),
+        isDownloaded: downloadedIds.contains(a.id),
+      );
+    }).toList();
+
+    return ArtworkList(
+      results: enrichedResults,
+      limit: limit,
+      count: count,
+      page: page,
+      numPages: (count / limit).ceil(),
+      canLoadMore: page * limit < count,
+    );
   }
 }

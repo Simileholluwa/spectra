@@ -1,1 +1,14 @@
-export './presentation/screens/user_profile_screen.dart';
+export 'presentation/screens/user_profile_screen.dart';
+export 'presentation/providers/user_screen_provider.dart';
+export 'domain/usecases/get_user_usecase.dart';
+export 'domain/usecases/get_user_artworks_usecase.dart';
+export 'data/datasources/user_remote_datasource.dart';
+export 'data/repository/user_repository_impl.dart';
+export 'domain/repository/user_repository.dart';
+export 'presentation/providers/get_user_provider.dart';
+export 'presentation/providers/user_services_provider.dart';
+export 'presentation/providers/paginated_user_artworks.dart';
+export 'domain/usecases/get_user_liked_artworks_usecase.dart';
+export 'presentation/providers/paginated_user_liked_artworks.dart';
+export 'domain/usecases/get_user_downloaded_artworks_usecase.dart';
+export 'presentation/providers/paginated_user_downloaded_artworks.dart';

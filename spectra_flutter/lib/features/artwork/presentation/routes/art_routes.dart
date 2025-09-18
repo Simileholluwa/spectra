@@ -1,4 +1,3 @@
-import 'package:spectra_client/spectra_client.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spectra_flutter/features/artwork/artwork.dart';
@@ -22,34 +21,6 @@ class ArtRoutes {
           GoRoute(
             path: 'upload',
             builder: (context, state) => const UploadScreen(),
-          ),
-          GoRoute(
-            path: ':artworkId',
-            builder: (context, state) {
-              final artworkState = state.extra as ArtworkWithUserState?;
-              return ArworkDetailScreen(
-                artworkId: int.parse(
-                  state.pathParameters['artworkId']!,
-                ),
-                artworkState: artworkState,
-              );
-            },
-            routes: [
-              GoRoute(
-                path: 'comment/:commentId/replies',
-                builder: (context, state) {
-                  return ArtworkRepliesScreen(
-                    artworkId: int.parse(
-                      state.pathParameters['artworkId']!,
-                    ),
-                    parentId: int.parse(
-                      state.pathParameters['commentId']!,
-                    ),
-                    comment: state.extra as ArtworkCommentWithUserState?,
-                  );
-                },
-              ),
-            ],
           ),
         ],
       ),
