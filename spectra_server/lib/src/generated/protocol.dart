@@ -40,10 +40,11 @@ import 'search_vector_response.dart' as _i28;
 import 'tag.dart' as _i29;
 import 'tags_list.dart' as _i30;
 import 'user.dart' as _i31;
+import 'user_with_state.dart' as _i32;
 import 'package:spectra_server/src/generated/presigned_url_response.dart'
-    as _i32;
-import 'package:spectra_server/src/generated/presigned_url_request.dart'
     as _i33;
+import 'package:spectra_server/src/generated/presigned_url_request.dart'
+    as _i34;
 export 'artwork.dart';
 export 'artwork_comment.dart';
 export 'artwork_comment_likes.dart';
@@ -72,6 +73,7 @@ export 'search_vector_response.dart';
 export 'tag.dart';
 export 'tags_list.dart';
 export 'user.dart';
+export 'user_with_state.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -954,7 +956,24 @@ class Protocol extends _i1.SerializationManagerServer {
           type: 'btree',
           isUnique: true,
           isPrimary: true,
-        )
+        ),
+        _i2.IndexDefinition(
+          indexName: 'follower_unique_index',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'followerId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'followingId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
       ],
       managed: true,
     ),
@@ -1084,6 +1103,7 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.text,
           isNullable: true,
           dartType: 'String?',
+          columnDefault: '\'Hello there, welcome to my profile!\'::text',
         ),
         _i2.ColumnDefinition(
           name: 'profileImageUrl',
@@ -1280,6 +1300,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i31.User) {
       return _i31.User.fromJson(data) as T;
     }
+    if (t == _i32.UserWithState) {
+      return _i32.UserWithState.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i4.Artwork?>()) {
       return (data != null ? _i4.Artwork.fromJson(data) : null) as T;
     }
@@ -1372,6 +1395,9 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (t == _i1.getType<_i31.User?>()) {
       return (data != null ? _i31.User.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i32.UserWithState?>()) {
+      return (data != null ? _i32.UserWithState.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<List<String>?>()) {
       return (data != null
@@ -1489,14 +1515,14 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
     }
-    if (t == List<_i32.PresignedUrlResponse>) {
+    if (t == List<_i33.PresignedUrlResponse>) {
       return (data as List)
-          .map((e) => deserialize<_i32.PresignedUrlResponse>(e))
+          .map((e) => deserialize<_i33.PresignedUrlResponse>(e))
           .toList() as T;
     }
-    if (t == List<_i33.PresignedUrlRequest>) {
+    if (t == List<_i34.PresignedUrlRequest>) {
       return (data as List)
-          .map((e) => deserialize<_i33.PresignedUrlRequest>(e))
+          .map((e) => deserialize<_i34.PresignedUrlRequest>(e))
           .toList() as T;
     }
     try {
@@ -1595,6 +1621,9 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (data is _i31.User) {
       return 'User';
+    }
+    if (data is _i32.UserWithState) {
+      return 'UserWithState';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -1696,6 +1725,9 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (dataClassName == 'User') {
       return deserialize<_i31.User>(data['data']);
+    }
+    if (dataClassName == 'UserWithState') {
+      return deserialize<_i32.UserWithState>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);

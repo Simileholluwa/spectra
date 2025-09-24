@@ -1,20 +1,19 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:spectra_client/spectra_client.dart';
 import 'package:spectra_flutter/core/core.dart';
 import 'package:spectra_flutter/features/user/user.dart';
 
-class GetUserUsecase implements UseCase<UserWithState, String> {
-  GetUserUsecase({
+class ToggleFollowUsecase implements UseCase<void, String> {
+  ToggleFollowUsecase({
     required UserRepository repository,
   }) : _repository = repository;
 
   final UserRepository _repository;
 
   @override
-  Future<Either<Failure, UserWithState>> call(
+  Future<Either<Failure, void>> call(
     String params,
   ) async {
-    return _repository.getUser(
+    return _repository.toggleFollow(
       username: params,
     );
   }

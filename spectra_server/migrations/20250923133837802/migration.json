@@ -1,0 +1,60 @@
+{
+  "actions": [
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "follower",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [],
+        "modifyColumns": [],
+        "addIndexes": [
+          {
+            "indexName": "follower_unique_index",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "followerId"
+              },
+              {
+                "type": 0,
+                "definition": "followingId"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          }
+        ],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "type": "uniqueIndexCreated",
+            "message": "Unique index \"follower_unique_index\" is added to table \"follower\". If there are existing rows with duplicate values, this migration will fail.",
+            "table": "follower",
+            "columns": [
+              "followerId",
+              "followingId"
+            ],
+            "destrucive": false
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "uniqueIndexCreated",
+      "message": "Unique index \"follower_unique_index\" is added to table \"follower\". If there are existing rows with duplicate values, this migration will fail.",
+      "table": "follower",
+      "columns": [
+        "followerId",
+        "followingId"
+      ],
+      "destrucive": false
+    }
+  ],
+  "migrationApiVersion": 1
+}

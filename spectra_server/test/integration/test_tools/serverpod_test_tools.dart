@@ -27,12 +27,14 @@ import 'package:spectra_server/src/generated/artwork_comment_with_user_state.dar
 import 'package:spectra_server/src/generated/artwork_updates.dart' as _i12;
 import 'package:spectra_server/src/generated/artwork_comment_updates.dart'
     as _i13;
-import 'package:spectra_server/src/generated/artwork.dart' as _i14;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i14;
+import 'package:spectra_server/src/generated/artwork.dart' as _i15;
 import 'package:spectra_server/src/generated/presigned_url_response.dart'
-    as _i15;
-import 'package:spectra_server/src/generated/presigned_url_request.dart'
     as _i16;
-import 'package:spectra_server/src/generated/user.dart' as _i17;
+import 'package:spectra_server/src/generated/presigned_url_request.dart'
+    as _i17;
+import 'package:spectra_server/src/generated/user.dart' as _i18;
+import 'package:spectra_server/src/generated/user_with_state.dart' as _i19;
 import 'package:spectra_server/src/generated/protocol.dart';
 import 'package:spectra_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -123,6 +125,8 @@ class TestEndpoints {
 
   late final _AssetsEndpoint assets;
 
+  late final _MyAuthenticationEndpoint myAuthentication;
+
   late final _SendEmailEndpoint sendEmail;
 
   late final _UploadEndpoint upload;
@@ -142,6 +146,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     assets = _AssetsEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    myAuthentication = _MyAuthenticationEndpoint(
       endpoints,
       serializationManager,
     );
@@ -793,6 +801,52 @@ class _AssetsEndpoint {
   }
 }
 
+class _MyAuthenticationEndpoint {
+  _MyAuthenticationEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i14.AuthenticationResponse> registerUser(
+    _i1.TestSessionBuilder sessionBuilder,
+    String email,
+    String password,
+    String username,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'myAuthentication',
+        method: 'registerUser',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'myAuthentication',
+          methodName: 'registerUser',
+          parameters: _i1.testObjectToJson({
+            'email': email,
+            'password': password,
+            'username': username,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i14.AuthenticationResponse>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
 class _SendEmailEndpoint {
   _SendEmailEndpoint(
     this._endpointDispatch,
@@ -853,9 +907,9 @@ class _UploadEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i14.Artwork?> saveArt(
+  _i3.Future<_i15.Artwork?> saveArt(
     _i1.TestSessionBuilder sessionBuilder,
-    _i14.Artwork artWork,
+    _i15.Artwork artWork,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -874,7 +928,7 @@ class _UploadEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i14.Artwork?>);
+        ) as _i3.Future<_i15.Artwork?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -909,9 +963,9 @@ class _UploadEndpoint {
     });
   }
 
-  _i3.Future<List<_i15.PresignedUrlResponse>> getPresignedUrl(
+  _i3.Future<List<_i16.PresignedUrlResponse>> getPresignedUrl(
     _i1.TestSessionBuilder sessionBuilder,
-    List<_i16.PresignedUrlRequest> files,
+    List<_i17.PresignedUrlRequest> files,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -930,7 +984,7 @@ class _UploadEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<List<_i15.PresignedUrlResponse>>);
+        ) as _i3.Future<List<_i16.PresignedUrlResponse>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -938,9 +992,9 @@ class _UploadEndpoint {
     });
   }
 
-  _i3.Stream<_i14.Artwork> newArtworkUpdates(
+  _i3.Stream<_i15.Artwork> newArtworkUpdates(
       _i1.TestSessionBuilder sessionBuilder) {
-    var _localTestStreamManager = _i1.TestStreamManager<_i14.Artwork>();
+    var _localTestStreamManager = _i1.TestStreamManager<_i15.Artwork>();
     _i1.callStreamFunctionAndHandleExceptions(
       () async {
         var _localUniqueSession =
@@ -979,9 +1033,9 @@ class _UserEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i17.User> saveUser(
+  _i3.Future<_i18.User> saveUser(
     _i1.TestSessionBuilder sessionBuilder,
-    _i17.User user,
+    _i18.User user,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1000,7 +1054,7 @@ class _UserEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i17.User>);
+        ) as _i3.Future<_i18.User>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1008,7 +1062,7 @@ class _UserEndpoint {
     });
   }
 
-  _i3.Future<_i17.User?> getUser(
+  _i3.Future<_i19.UserWithState> getUser(
     _i1.TestSessionBuilder sessionBuilder,
     String username,
   ) async {
@@ -1029,7 +1083,7 @@ class _UserEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i17.User?>);
+        ) as _i3.Future<_i19.UserWithState>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1201,6 +1255,35 @@ class _UserEndpoint {
           _localUniqueSession,
           _localCallContext.arguments,
         ) as _i3.Future<_i4.ArtworkList>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<void> toggleFollow(
+    _i1.TestSessionBuilder sessionBuilder,
+    String username,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'user',
+        method: 'toggleFollow',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'user',
+          methodName: 'toggleFollow',
+          parameters: _i1.testObjectToJson({'username': username}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<void>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

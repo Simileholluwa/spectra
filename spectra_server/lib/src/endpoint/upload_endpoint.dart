@@ -15,40 +15,50 @@ class UploadEndpoint extends Endpoint {
     Session session,
     Artwork artWork,
   ) async {
-    try {
-      final user = await authUser(session);
-      final savedArtWork = await addArtwork(
-        session,
-        artWork.copyWith(
-          userId: user.userId,
-        ),
-        user,
-      );
-      unawaited(
-        addTags(
-          session,
-          artWork.tagNames!,
-          savedArtWork.id!,
-        ),
-      );
-      unawaited(
-        addModels(
-          session,
-          artWork.modelNames!,
-          savedArtWork.id!,
-        ),
-      );
-      return savedArtWork;
-    } catch (e) {
-      session.log(
-        'Error occurred while uploading artwork: $e',
-        level: LogLevel.error,
-        stackTrace: StackTrace.current,
-      );
-      throw ServerSideException(
-        message: 'An error occurred while processing the request: $e',
-      );
-    }
+    return await session.db.transaction(
+      (transaction) async {
+        try {
+          final user = await authUser(session);
+          final savedArtWork = await addArtwork(
+            session,
+            artWork.copyWith(
+              userId: user.userId,
+            ),
+            user,
+          );
+          await updateUser(
+            session,
+            user.copyWith(
+              artworksCount: user.artworksCount! + 1,
+            ),
+          );
+          unawaited(
+            addTags(
+              session,
+              artWork.tagNames!,
+              savedArtWork.id!,
+            ),
+          );
+          unawaited(
+            addModels(
+              session,
+              artWork.modelNames!,
+              savedArtWork.id!,
+            ),
+          );
+          return savedArtWork;
+        } catch (e) {
+          session.log(
+            'Error occurred while uploading artwork: $e',
+            level: LogLevel.error,
+            stackTrace: StackTrace.current,
+          );
+          throw ServerSideException(
+            message: 'An error occurred while processing the request: $e',
+          );
+        }
+      },
+    );
   }
 
   @doNotGenerate
@@ -247,5 +257,10 @@ class UploadEndpoint extends Endpoint {
       ),
     );
     return saved;
+  }
+
+  @doNotGenerate
+  Future<void> updateUser(Session session, User user) async {
+    await User.db.updateRow(session, user);
   }
 }

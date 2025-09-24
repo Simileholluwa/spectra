@@ -24,13 +24,14 @@ import 'package:spectra_client/src/protocol/artwork_comment_with_user_state.dart
 import 'package:spectra_client/src/protocol/artwork_updates.dart' as _i11;
 import 'package:spectra_client/src/protocol/artwork_comment_updates.dart'
     as _i12;
-import 'package:spectra_client/src/protocol/artwork.dart' as _i13;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i13;
+import 'package:spectra_client/src/protocol/artwork.dart' as _i14;
 import 'package:spectra_client/src/protocol/presigned_url_response.dart'
-    as _i14;
-import 'package:spectra_client/src/protocol/presigned_url_request.dart' as _i15;
-import 'package:spectra_client/src/protocol/user.dart' as _i16;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i17;
-import 'protocol.dart' as _i18;
+    as _i15;
+import 'package:spectra_client/src/protocol/presigned_url_request.dart' as _i16;
+import 'package:spectra_client/src/protocol/user.dart' as _i17;
+import 'package:spectra_client/src/protocol/user_with_state.dart' as _i18;
+import 'protocol.dart' as _i19;
 
 /// {@category Endpoint}
 class EndpointArtwork extends _i1.EndpointRef {
@@ -248,6 +249,29 @@ class EndpointAssets extends _i1.EndpointRef {
 }
 
 /// {@category Endpoint}
+class EndpointMyAuthentication extends _i1.EndpointRef {
+  EndpointMyAuthentication(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'myAuthentication';
+
+  _i2.Future<_i13.AuthenticationResponse> registerUser(
+    String email,
+    String password,
+    String username,
+  ) =>
+      caller.callServerEndpoint<_i13.AuthenticationResponse>(
+        'myAuthentication',
+        'registerUser',
+        {
+          'email': email,
+          'password': password,
+          'username': username,
+        },
+      );
+}
+
+/// {@category Endpoint}
 class EndpointSendEmail extends _i1.EndpointRef {
   EndpointSendEmail(_i1.EndpointCaller caller) : super(caller);
 
@@ -281,8 +305,8 @@ class EndpointUpload extends _i1.EndpointRef {
   @override
   String get name => 'upload';
 
-  _i2.Future<_i13.Artwork?> saveArt(_i13.Artwork artWork) =>
-      caller.callServerEndpoint<_i13.Artwork?>(
+  _i2.Future<_i14.Artwork?> saveArt(_i14.Artwork artWork) =>
+      caller.callServerEndpoint<_i14.Artwork?>(
         'upload',
         'saveArt',
         {'artWork': artWork},
@@ -294,16 +318,16 @@ class EndpointUpload extends _i1.EndpointRef {
         {},
       );
 
-  _i2.Future<List<_i14.PresignedUrlResponse>> getPresignedUrl(
-          List<_i15.PresignedUrlRequest> files) =>
-      caller.callServerEndpoint<List<_i14.PresignedUrlResponse>>(
+  _i2.Future<List<_i15.PresignedUrlResponse>> getPresignedUrl(
+          List<_i16.PresignedUrlRequest> files) =>
+      caller.callServerEndpoint<List<_i15.PresignedUrlResponse>>(
         'upload',
         'getPresignedUrl',
         {'files': files},
       );
 
-  _i2.Stream<_i13.Artwork> newArtworkUpdates() => caller
-          .callStreamingServerEndpoint<_i2.Stream<_i13.Artwork>, _i13.Artwork>(
+  _i2.Stream<_i14.Artwork> newArtworkUpdates() => caller
+          .callStreamingServerEndpoint<_i2.Stream<_i14.Artwork>, _i14.Artwork>(
         'upload',
         'newArtworkUpdates',
         {},
@@ -318,15 +342,15 @@ class EndpointUser extends _i1.EndpointRef {
   @override
   String get name => 'user';
 
-  _i2.Future<_i16.User> saveUser(_i16.User user) =>
-      caller.callServerEndpoint<_i16.User>(
+  _i2.Future<_i17.User> saveUser(_i17.User user) =>
+      caller.callServerEndpoint<_i17.User>(
         'user',
         'saveUser',
         {'user': user},
       );
 
-  _i2.Future<_i16.User?> getUser(String username) =>
-      caller.callServerEndpoint<_i16.User?>(
+  _i2.Future<_i18.UserWithState> getUser(String username) =>
+      caller.callServerEndpoint<_i18.UserWithState>(
         'user',
         'getUser',
         {'username': username},
@@ -398,14 +422,21 @@ class EndpointUser extends _i1.EndpointRef {
           'sortDescending': sortDescending,
         },
       );
+
+  _i2.Future<void> toggleFollow(String username) =>
+      caller.callServerEndpoint<void>(
+        'user',
+        'toggleFollow',
+        {'username': username},
+      );
 }
 
 class Modules {
   Modules(Client client) {
-    auth = _i17.Caller(client);
+    auth = _i13.Caller(client);
   }
 
-  late final _i17.Caller auth;
+  late final _i13.Caller auth;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -424,7 +455,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i18.Protocol(),
+          _i19.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -436,6 +467,7 @@ class Client extends _i1.ServerpodClientShared {
         ) {
     artwork = EndpointArtwork(this);
     assets = EndpointAssets(this);
+    myAuthentication = EndpointMyAuthentication(this);
     sendEmail = EndpointSendEmail(this);
     upload = EndpointUpload(this);
     user = EndpointUser(this);
@@ -445,6 +477,8 @@ class Client extends _i1.ServerpodClientShared {
   late final EndpointArtwork artwork;
 
   late final EndpointAssets assets;
+
+  late final EndpointMyAuthentication myAuthentication;
 
   late final EndpointSendEmail sendEmail;
 
@@ -458,6 +492,7 @@ class Client extends _i1.ServerpodClientShared {
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
         'artwork': artwork,
         'assets': assets,
+        'myAuthentication': myAuthentication,
         'sendEmail': sendEmail,
         'upload': upload,
         'user': user,

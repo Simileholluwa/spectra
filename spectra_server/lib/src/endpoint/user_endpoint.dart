@@ -15,35 +15,43 @@ class UserEndpoint extends Endpoint {
     return savedUser;
   }
 
-  Future<User?> getUser(
+  Future<UserWithState> getUser(
     Session session,
     String username,
   ) async {
-    var cacheKey = 'UserData-$username';
-    var user = await session.caches.localPrio.get<User>(
-      cacheKey,
+    final user = await User.db.findFirstRow(
+      session,
+      where: (row) => row.username.equals(username),
+      include: User.include(
+        user: UserInfo.include(),
+      ),
     );
 
     if (user == null) {
-      user = await User.db.findFirstRow(
-        session,
-        where: (row) => row.username.equals(username),
-        include: User.include(
-          user: UserInfo.include(),
-        ),
-      );
-      if (user != null) {
-        await session.caches.localPrio.put(
-          cacheKey,
-          user,
-          lifetime: Duration(
-            days: 1,
-          ),
-        );
-      }
+      throw ServerSideException(message: 'User not found');
     }
 
-    return user;
+    final currentUser = await session.authenticated;
+    if (currentUser == null) {
+      throw ServerSideException(message: 'You must be logged in.');
+    }
+    bool isFollowing = false;
+
+    if (currentUser.userId != user.id) {
+      final follower = await Follower.db.findFirstRow(
+        session,
+        where: (row) =>
+            row.followerId.equals(currentUser.userId) &
+            row.followingId.equals(user.id),
+      );
+
+      isFollowing = follower != null;
+    }
+
+    return UserWithState(
+      user: user,
+      isFollowing: isFollowing,
+    );
   }
 
   Future<String?> checkIfNewUser(Session session, String email) async {
@@ -321,6 +329,52 @@ class UserEndpoint extends Endpoint {
       page: page,
       numPages: (count / limit).ceil(),
       canLoadMore: page * limit < count,
+    );
+  }
+
+  Future<void> toggleFollow(Session session, String username) async {
+    return session.db.transaction(
+      (transaction) async {
+        try {
+          final user = await session.authenticated;
+          if (user == null) {
+            throw ServerSideException(
+              message: 'You must be logged in.',
+            );
+          }
+          final followingUser = await User.db.findFirstRow(
+            session,
+            where: (row) => row.username.equals(username),
+          );
+          if (followingUser == null) {
+            throw ServerSideException(
+              message: 'User not found',
+            );
+          }
+          final isFollowing = await Follower.db.findFirstRow(
+            session,
+            where: (row) =>
+                row.followerId.equals(user.userId) &
+                row.followingId.equals(followingUser.id),
+          );
+          if (isFollowing != null) {
+            await Follower.db.deleteRow(session, isFollowing);
+          } else {
+            await Follower.db.insertRow(
+              session,
+              Follower(
+                followerId: user.userId,
+                followingId: followingUser.id!,
+              ),
+            );
+          }
+        } catch (e) {
+          session.log(
+            'Error in following/unfollowing user: $e',
+            level: LogLevel.error,
+          );
+        }
+      },
     );
   }
 }

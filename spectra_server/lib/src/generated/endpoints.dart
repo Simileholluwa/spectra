@@ -12,16 +12,17 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../endpoint/artwork_endpoint.dart' as _i2;
 import '../endpoint/assets_endpoint.dart' as _i3;
-import '../endpoint/send_email_endpoint.dart' as _i4;
-import '../endpoint/upload_endpoint.dart' as _i5;
-import '../endpoint/user_endpoint.dart' as _i6;
-import 'package:spectra_server/src/generated/filters.dart' as _i7;
-import 'package:spectra_server/src/generated/artwork_comment.dart' as _i8;
-import 'package:spectra_server/src/generated/artwork.dart' as _i9;
+import '../endpoint/auth_endpoint.dart' as _i4;
+import '../endpoint/send_email_endpoint.dart' as _i5;
+import '../endpoint/upload_endpoint.dart' as _i6;
+import '../endpoint/user_endpoint.dart' as _i7;
+import 'package:spectra_server/src/generated/filters.dart' as _i8;
+import 'package:spectra_server/src/generated/artwork_comment.dart' as _i9;
+import 'package:spectra_server/src/generated/artwork.dart' as _i10;
 import 'package:spectra_server/src/generated/presigned_url_request.dart'
-    as _i10;
-import 'package:spectra_server/src/generated/user.dart' as _i11;
-import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i12;
+    as _i11;
+import 'package:spectra_server/src/generated/user.dart' as _i12;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i13;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -39,19 +40,25 @@ class Endpoints extends _i1.EndpointDispatch {
           'assets',
           null,
         ),
-      'sendEmail': _i4.SendEmailEndpoint()
+      'myAuthentication': _i4.MyAuthenticationEndpoint()
+        ..initialize(
+          server,
+          'myAuthentication',
+          null,
+        ),
+      'sendEmail': _i5.SendEmailEndpoint()
         ..initialize(
           server,
           'sendEmail',
           null,
         ),
-      'upload': _i5.UploadEndpoint()
+      'upload': _i6.UploadEndpoint()
         ..initialize(
           server,
           'upload',
           null,
         ),
-      'user': _i6.UserEndpoint()
+      'user': _i7.UserEndpoint()
         ..initialize(
           server,
           'user',
@@ -67,7 +74,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'filter': _i1.ParameterDescription(
               name: 'filter',
-              type: _i1.getType<_i7.ArtworkFilter?>(),
+              type: _i1.getType<_i8.ArtworkFilter?>(),
               nullable: true,
             ),
             'limit': _i1.ParameterDescription(
@@ -266,7 +273,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'comment': _i1.ParameterDescription(
               name: 'comment',
-              type: _i1.getType<_i8.ArtworkComment>(),
+              type: _i1.getType<_i9.ArtworkComment>(),
               nullable: false,
             )
           },
@@ -410,7 +417,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'reply': _i1.ParameterDescription(
               name: 'reply',
-              type: _i1.getType<_i8.ArtworkComment>(),
+              type: _i1.getType<_i9.ArtworkComment>(),
               nullable: false,
             )
           },
@@ -541,6 +548,43 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
+    connectors['myAuthentication'] = _i1.EndpointConnector(
+      name: 'myAuthentication',
+      endpoint: endpoints['myAuthentication']!,
+      methodConnectors: {
+        'registerUser': _i1.MethodConnector(
+          name: 'registerUser',
+          params: {
+            'email': _i1.ParameterDescription(
+              name: 'email',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'password': _i1.ParameterDescription(
+              name: 'password',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'username': _i1.ParameterDescription(
+              name: 'username',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['myAuthentication'] as _i4.MyAuthenticationEndpoint)
+                  .registerUser(
+            session,
+            params['email'],
+            params['password'],
+            params['username'],
+          ),
+        )
+      },
+    );
     connectors['sendEmail'] = _i1.EndpointConnector(
       name: 'sendEmail',
       endpoint: endpoints['sendEmail']!,
@@ -578,7 +622,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['sendEmail'] as _i4.SendEmailEndpoint).sendEmail(
+              (endpoints['sendEmail'] as _i5.SendEmailEndpoint).sendEmail(
             session,
             params['email'],
             params['code'],
@@ -598,7 +642,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'artWork': _i1.ParameterDescription(
               name: 'artWork',
-              type: _i1.getType<_i9.Artwork>(),
+              type: _i1.getType<_i10.Artwork>(),
               nullable: false,
             )
           },
@@ -606,7 +650,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['upload'] as _i5.UploadEndpoint).saveArt(
+              (endpoints['upload'] as _i6.UploadEndpoint).saveArt(
             session,
             params['artWork'],
           ),
@@ -618,7 +662,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['upload'] as _i5.UploadEndpoint)
+              (endpoints['upload'] as _i6.UploadEndpoint)
                   .createUploadToken(session),
         ),
         'getPresignedUrl': _i1.MethodConnector(
@@ -626,7 +670,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'files': _i1.ParameterDescription(
               name: 'files',
-              type: _i1.getType<List<_i10.PresignedUrlRequest>>(),
+              type: _i1.getType<List<_i11.PresignedUrlRequest>>(),
               nullable: false,
             )
           },
@@ -634,7 +678,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['upload'] as _i5.UploadEndpoint).getPresignedUrl(
+              (endpoints['upload'] as _i6.UploadEndpoint).getPresignedUrl(
             session,
             params['files'],
           ),
@@ -649,7 +693,7 @@ class Endpoints extends _i1.EndpointDispatch {
             Map<String, dynamic> params,
             Map<String, Stream> streamParams,
           ) =>
-              (endpoints['upload'] as _i5.UploadEndpoint)
+              (endpoints['upload'] as _i6.UploadEndpoint)
                   .newArtworkUpdates(session),
         ),
       },
@@ -663,7 +707,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'user': _i1.ParameterDescription(
               name: 'user',
-              type: _i1.getType<_i11.User>(),
+              type: _i1.getType<_i12.User>(),
               nullable: false,
             )
           },
@@ -671,7 +715,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i6.UserEndpoint).saveUser(
+              (endpoints['user'] as _i7.UserEndpoint).saveUser(
             session,
             params['user'],
           ),
@@ -689,7 +733,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i6.UserEndpoint).getUser(
+              (endpoints['user'] as _i7.UserEndpoint).getUser(
             session,
             params['username'],
           ),
@@ -707,7 +751,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i6.UserEndpoint).checkIfNewUser(
+              (endpoints['user'] as _i7.UserEndpoint).checkIfNewUser(
             session,
             params['email'],
           ),
@@ -725,7 +769,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i6.UserEndpoint).checkValidUsername(
+              (endpoints['user'] as _i7.UserEndpoint).checkValidUsername(
             session,
             params['username'],
           ),
@@ -763,7 +807,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i6.UserEndpoint).getUserArtworks(
+              (endpoints['user'] as _i7.UserEndpoint).getUserArtworks(
             session,
             params['username'],
             limit: params['limit'],
@@ -800,7 +844,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i6.UserEndpoint).getUserLikedArtworks(
+              (endpoints['user'] as _i7.UserEndpoint).getUserLikedArtworks(
             session,
             params['username'],
             limit: params['limit'],
@@ -836,7 +880,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i6.UserEndpoint).getUserDownloadedArtworks(
+              (endpoints['user'] as _i7.UserEndpoint).getUserDownloadedArtworks(
             session,
             params['username'],
             limit: params['limit'],
@@ -844,8 +888,26 @@ class Endpoints extends _i1.EndpointDispatch {
             sortDescending: params['sortDescending'],
           ),
         ),
+        'toggleFollow': _i1.MethodConnector(
+          name: 'toggleFollow',
+          params: {
+            'username': _i1.ParameterDescription(
+              name: 'username',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['user'] as _i7.UserEndpoint).toggleFollow(
+            session,
+            params['username'],
+          ),
+        ),
       },
     );
-    modules['serverpod_auth'] = _i12.Endpoints()..initializeEndpoints(server);
+    modules['serverpod_auth'] = _i13.Endpoints()..initializeEndpoints(server);
   }
 }

@@ -3,7 +3,11 @@ import 'package:spectra_client/spectra_client.dart';
 import 'package:spectra_flutter/core/core.dart';
 
 abstract class UserRepository {
-  Future<Either<Failure, User>> getUser({
+  Future<Either<Failure, UserWithState>> getUser({
+    required String username,
+  });
+
+  Future<Either<Failure, void>> toggleFollow({
     required String username,
   });
 

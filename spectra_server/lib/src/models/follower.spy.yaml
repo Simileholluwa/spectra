@@ -3,7 +3,10 @@ table: follower
 
 fields:
   follower: User?, relation
-  following:  User?, relation
+  following: User?, relation
   followedAt: DateTime?, default=now
 
-
+indexes:
+  follower_unique_index:
+    fields: followerId, followingId
+    unique: true

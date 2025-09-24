@@ -38,10 +38,11 @@ import 'search_vector_response.dart' as _i26;
 import 'tag.dart' as _i27;
 import 'tags_list.dart' as _i28;
 import 'user.dart' as _i29;
+import 'user_with_state.dart' as _i30;
 import 'package:spectra_client/src/protocol/presigned_url_response.dart'
-    as _i30;
-import 'package:spectra_client/src/protocol/presigned_url_request.dart' as _i31;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i32;
+    as _i31;
+import 'package:spectra_client/src/protocol/presigned_url_request.dart' as _i32;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i33;
 export 'artwork.dart';
 export 'artwork_comment.dart';
 export 'artwork_comment_likes.dart';
@@ -70,6 +71,7 @@ export 'search_vector_response.dart';
 export 'tag.dart';
 export 'tags_list.dart';
 export 'user.dart';
+export 'user_with_state.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
@@ -169,6 +171,9 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i29.User) {
       return _i29.User.fromJson(data) as T;
     }
+    if (t == _i30.UserWithState) {
+      return _i30.UserWithState.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i2.Artwork?>()) {
       return (data != null ? _i2.Artwork.fromJson(data) : null) as T;
     }
@@ -261,6 +266,9 @@ class Protocol extends _i1.SerializationManager {
     }
     if (t == _i1.getType<_i29.User?>()) {
       return (data != null ? _i29.User.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i30.UserWithState?>()) {
+      return (data != null ? _i30.UserWithState.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<List<String>?>()) {
       return (data != null
@@ -378,18 +386,18 @@ class Protocol extends _i1.SerializationManager {
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
     }
-    if (t == List<_i30.PresignedUrlResponse>) {
+    if (t == List<_i31.PresignedUrlResponse>) {
       return (data as List)
-          .map((e) => deserialize<_i30.PresignedUrlResponse>(e))
+          .map((e) => deserialize<_i31.PresignedUrlResponse>(e))
           .toList() as T;
     }
-    if (t == List<_i31.PresignedUrlRequest>) {
+    if (t == List<_i32.PresignedUrlRequest>) {
       return (data as List)
-          .map((e) => deserialize<_i31.PresignedUrlRequest>(e))
+          .map((e) => deserialize<_i32.PresignedUrlRequest>(e))
           .toList() as T;
     }
     try {
-      return _i32.Protocol().deserialize<T>(data, t);
+      return _i33.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -482,7 +490,10 @@ class Protocol extends _i1.SerializationManager {
     if (data is _i29.User) {
       return 'User';
     }
-    className = _i32.Protocol().getClassNameForObject(data);
+    if (data is _i30.UserWithState) {
+      return 'UserWithState';
+    }
+    className = _i33.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth.$className';
     }
@@ -579,9 +590,12 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'User') {
       return deserialize<_i29.User>(data['data']);
     }
+    if (dataClassName == 'UserWithState') {
+      return deserialize<_i30.UserWithState>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod_auth.')) {
       data['className'] = dataClassName.substring(15);
-      return _i32.Protocol().deserializeByClassName(data);
+      return _i33.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }

@@ -109,8 +109,6 @@ class AuthRemoteDatabaseImpl implements AuthRemoteDatabase {
         );
       }
       return result;
-    } on TimeoutException catch (_) {
-      throw const ServerException(message: 'Request timed out.');
     } on SocketException catch (_) {
       throw const ServerException(
           message: 'Failed to connect to server. Please try again.');
@@ -180,18 +178,13 @@ class AuthRemoteDatabaseImpl implements AuthRemoteDatabase {
 
       await _sessionManager.refreshSession();
 
-      final user = await _client.user.getUser(result.userInfo!.userName!);
-      if (user == null) {
-        throw const ServerException(
-          message: 'User record not found',
-        );
-      }
-      await _localDatabase.saveUser(
-        user: user,
+      final user = await _client.user.getUser(
+        result.userInfo!.userName!,
       );
-      return user;
-    } on TimeoutException catch (_) {
-      throw const ServerException(message: 'Request timed out.');
+      await _localDatabase.saveUser(
+        user: user.user,
+      );
+      return user.user;
     } on SocketException catch (_) {
       throw const ServerException(
           message: 'Failed to connect to server. Please try again.');
@@ -276,8 +269,6 @@ class AuthRemoteDatabaseImpl implements AuthRemoteDatabase {
       }
 
       return signedInUser;
-    } on TimeoutException catch (_) {
-      throw const ServerException(message: 'Request timed out.');
     } on SocketException catch (_) {
       throw const ServerException(
           message: 'Failed to connect to server. Please try again.');
@@ -324,8 +315,6 @@ class AuthRemoteDatabaseImpl implements AuthRemoteDatabase {
         );
       }
       return result;
-    } on TimeoutException catch (_) {
-      throw const ServerException(message: 'Request timed out.');
     } on SocketException catch (_) {
       throw const ServerException(
           message: 'Failed to connect to server. Please try again.');

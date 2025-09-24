@@ -19,6 +19,8 @@ artwork:
 assets:
   - getUploadDescription:
   - verifyUpload:
+myAuthentication:
+  - registerUser:
 sendEmail:
   - sendEmail:
 upload:
@@ -34,3 +36,4 @@ user:
   - getUserArtworks:
   - getUserLikedArtworks:
   - getUserDownloadedArtworks:
+  - toggleFollow:

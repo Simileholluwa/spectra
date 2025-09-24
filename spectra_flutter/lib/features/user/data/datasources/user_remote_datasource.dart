@@ -2,7 +2,11 @@ import 'package:spectra_client/spectra_client.dart';
 import 'package:spectra_flutter/core/core.dart';
 
 abstract class UserRemoteDatasource {
-  Future<User> getUser({
+  Future<UserWithState> getUser({
+    required String username,
+  });
+
+  Future<void> toggleFollow({
     required String username,
   });
 
@@ -37,18 +41,13 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
   final Client _client;
 
   @override
-  Future<User> getUser({
+  Future<UserWithState> getUser({
     required String username,
   }) async {
     try {
       final user = await _client.user.getUser(
         username,
       );
-      if (user == null) {
-        throw ServerSideException(
-          message: 'User not found',
-        );
-      }
       return user;
     } on ServerSideException catch (e) {
       throw ServerException(
@@ -134,6 +133,24 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
       throw ServerException(
         message: e.toString(),
       );
+    } catch (e) {
+      throw ServerException(
+        message: e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> toggleFollow({
+    required String username,
+  }) async {
+    try {
+      await _client.user.toggleFollow(
+        username,
+      );
+      return;
+    } on ServerSideException catch (e) {
+      throw ServerException(message: e.message);
     } catch (e) {
       throw ServerException(
         message: e.toString(),

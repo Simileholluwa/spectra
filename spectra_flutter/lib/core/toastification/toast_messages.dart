@@ -6,9 +6,9 @@ class TToastMessages {
   TToastMessages._();
 
   static ToastificationItem errorToast(
-    String message,
-    {int closeDuration = 5,}
-  ) {
+    String message, {
+    int closeDuration = 5,
+  }) {
     return toastification.show(
       description: Text(
         message,
@@ -20,7 +20,11 @@ class TToastMessages {
       autoCloseDuration: Duration(
         seconds: closeDuration,
       ),
-      margin: const EdgeInsets.only(left: TSizes.md, right: TSizes.md, bottom: TSizes.md,),
+      margin: const EdgeInsets.only(
+        left: TSizes.md,
+        right: TSizes.md,
+        bottom: TSizes.md,
+      ),
       type: ToastificationType.error,
       style: ToastificationStyle.fillColored,
       alignment: Alignment.bottomCenter,
@@ -31,9 +35,9 @@ class TToastMessages {
   }
 
   static ToastificationItem infoToast(
-    String message,
-    {int closeDuration = 5,}
-  ) {
+    String message, {
+    int closeDuration = 5,
+  }) {
     return toastification.show(
       description: Text(
         message,
@@ -45,7 +49,11 @@ class TToastMessages {
       autoCloseDuration: Duration(
         seconds: closeDuration,
       ),
-      margin: const EdgeInsets.only(left: TSizes.md, right: TSizes.md, bottom: TSizes.md,),
+      margin: const EdgeInsets.only(
+        left: TSizes.md,
+        right: TSizes.md,
+        bottom: TSizes.md,
+      ),
       type: ToastificationType.info,
       style: ToastificationStyle.fillColored,
       alignment: Alignment.bottomCenter,
@@ -56,9 +64,9 @@ class TToastMessages {
   }
 
   static ToastificationItem successToast(
-    String message,
-    {int closeDuration = 5,}
-  ) {
+    String message, {
+    int closeDuration = 5,
+  }) {
     return toastification.show(
       description: Text(
         message,
@@ -67,10 +75,18 @@ class TToastMessages {
           fontWeight: FontWeight.normal,
         ),
       ),
+      icon: Icon(
+        Icons.check_circle_rounded,
+        color: TColors.light,
+      ),
       autoCloseDuration: Duration(
         seconds: closeDuration,
       ),
-      margin: const EdgeInsets.only(left: TSizes.md, right: TSizes.md, bottom: TSizes.md,),
+      margin: const EdgeInsets.only(
+        left: TSizes.md,
+        right: TSizes.md,
+        bottom: TSizes.md,
+      ),
       type: ToastificationType.info,
       style: ToastificationStyle.fillColored,
       alignment: Alignment.bottomCenter,
@@ -81,9 +97,9 @@ class TToastMessages {
   }
 
   static ToastificationItem warningToast(
-    String message,
-    {int closeDuration = 5,}
-  ) {
+    String message, {
+    int closeDuration = 5,
+  }) {
     return toastification.show(
       description: Text(
         message,
@@ -92,7 +108,11 @@ class TToastMessages {
           fontWeight: FontWeight.normal,
         ),
       ),
-      margin: const EdgeInsets.only(left: TSizes.md, right: TSizes.md, bottom: TSizes.md,),
+      margin: const EdgeInsets.only(
+        left: TSizes.md,
+        right: TSizes.md,
+        bottom: TSizes.md,
+      ),
       type: ToastificationType.warning,
       style: ToastificationStyle.fillColored,
       alignment: Alignment.bottomCenter,

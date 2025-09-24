@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:spectra_flutter/core/core.dart';
-import 'package:spectra_flutter/features/artwork/artwork.dart';
 import 'package:spectra_flutter/features/user/user.dart';
 
 class UserProfileScreen extends ConsumerWidget {
@@ -18,11 +17,7 @@ class UserProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tabController = ref.watch(userScreenTabControllerProvider);
-    final data = ref.watch(
-      getUserProvider(
-        username,
-      ),
-    );
+    final data = ref.watch(getUserProvider(username));
     return AppAndroidBottomNav(
       child: PopScope(
         canPop: false,
@@ -31,30 +26,25 @@ class UserProfileScreen extends ConsumerWidget {
         },
         child: Scaffold(
           body: data.when(
-            data: (user) {
-              final pagingController = ref.watch(
-                paginatedUserArtworksProvider(
-                  username,
-                  'createdAt',
-                  true,
-                ),
-              );
-              final likesPagingController = ref.watch(
-                paginatedUserLikedArtworksProvider(
-                  username,
-                  true,
-                ),
-              );
-              final downloadsPagingController = ref.watch(
-                paginatedUserDownloadedArtworksProvider(
-                  username,
-                  true,
-                ),
+            data: (userWithState) {
+              final userState = ref.watch(
+                profileNotifierProvider(userWithState),
               );
               return NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
                   SliverAppBar(
                     pinned: true,
+                    title: AnimatedCrossFade(
+                      crossFadeState: innerBoxIsScrolled
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
+                      duration: const Duration(milliseconds: 300),
+                      secondChild: const SizedBox(),
+                      firstChild: Text(
+                        username,
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ),
+                    ),
                     leading: IconButton(
                       onPressed: () {
                         context.go('/artworks');
@@ -64,8 +54,10 @@ class UserProfileScreen extends ConsumerWidget {
                     actions: [
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(
-                          Iconsax.setting,
+                        icon: Icon(
+                          userState.isCurrentUser
+                              ? Iconsax.setting
+                              : Iconsax.notification,
                         ),
                       ),
                       const SizedBox(
@@ -80,111 +72,15 @@ class UserProfileScreen extends ConsumerWidget {
                         spacing: 10,
                         children: [
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             spacing: 10,
                             children: [
                               AppUserProfileImage(
-                                imageUrl: user.user!.imageUrl ?? '',
+                                imageUrl: userState.photoUrl,
                                 radius: 35,
                                 iconSize: 40,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      username,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineLarge,
-                                    ),
-                                    RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: '${user.followersCount!} ',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .color,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: 'followers',
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(context).hintColor,
-                                            ),
-                                          ),
-                                          const WidgetSpan(
-                                            alignment:
-                                                PlaceholderAlignment.middle,
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 6),
-                                              child: Icon(
-                                                Icons.circle,
-                                                size: 6,
-                                                color: TColors.secondary,
-                                              ),
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: '${user.followingCount!} ',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .color,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: 'following',
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(context).hintColor,
-                                            ),
-                                          ),
-                                          const WidgetSpan(
-                                            alignment:
-                                                PlaceholderAlignment.middle,
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 6),
-                                              child: Icon(
-                                                Icons.circle,
-                                                size: 6,
-                                                color: TColors.secondary,
-                                              ),
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: '${user.artworksCount!} ',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .color,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: 'artworks',
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(context).hintColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              UserDetails(userWithState: userWithState),
                             ],
                           ),
                           SizedBox(
@@ -192,54 +88,11 @@ class UserProfileScreen extends ConsumerWidget {
                             child: Row(
                               spacing: 15,
                               children: [
-                                Expanded(
-                                  child: OutlinedButton(
-                                    style: ButtonStyle(
-                                      foregroundColor: WidgetStatePropertyAll(
-                                        Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .color,
-                                      ),
-                                    ),
-                                    onPressed: () {},
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 4,
-                                      ),
-                                      child: Text(
-                                        'Edit profile',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                FollowOrEditButton(
+                                  userWithState: userWithState,
+                                  username: username,
                                 ),
-                                Expanded(
-                                  child: OutlinedButton(
-                                    style: ButtonStyle(
-                                      foregroundColor: WidgetStatePropertyAll(
-                                        Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .color,
-                                      ),
-                                    ),
-                                    onPressed: () {},
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 4,
-                                      ),
-                                      child: Text(
-                                        'Share profile',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                ShareProfileButton(),
                               ],
                             ),
                           ),
@@ -254,18 +107,10 @@ class UserProfileScreen extends ConsumerWidget {
                         tabController: tabController,
                         showTopBorder: true,
                         tabs: [
-                          Tab(
-                            text: 'ARTWORKS',
-                          ),
-                          Tab(
-                            text: 'LIKES',
-                          ),
-                          Tab(
-                            text: 'DOWNLOADS',
-                          ),
-                          Tab(
-                            text: 'COMMENTS',
-                          ),
+                          Tab(text: 'ARTWORKS'),
+                          Tab(text: 'LIKES'),
+                          Tab(text: 'DOWNLOADS'),
+                          Tab(text: 'COMMENTS'),
                         ],
                       ),
                     ),
@@ -274,84 +119,23 @@ class UserProfileScreen extends ConsumerWidget {
                 body: TabBarView(
                   controller: tabController,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
-                      child: AppInfiniteStaggeredGrid(
-                        padding: EdgeInsets.zero,
-                        onRefresh: pagingController.refresh,
-                        pagingController: pagingController,
-                        itemBuilder: (context, artworkState, index) {
-                          final artwork = artworkState.artwork;
-                          return artwork.thumbnailUrl!.length > 1
-                              ? MultipleImagArt(
-                                  artworkState: artworkState,
-                                  index: index,
-                                  resolution: artwork.resolution!.first,
-                                  borderRadius: 8,
-                                )
-                              : SingleImageArt(
-                                  borderRadius: 8,
-                                  artworkState: artworkState,
-                                );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
-                      child: AppInfiniteStaggeredGrid(
-                        padding: EdgeInsets.zero,
-                        onRefresh: likesPagingController.refresh,
-                        pagingController: likesPagingController,
-                        itemBuilder: (context, artworkState, index) {
-                          final artwork = artworkState.artwork;
-                          return artwork.thumbnailUrl!.length > 1
-                              ? MultipleImagArt(
-                                  artworkState: artworkState,
-                                  index: index,
-                                  resolution: artwork.resolution!.first,
-                                  borderRadius: 8,
-                                )
-                              : SingleImageArt(
-                                  borderRadius: 8,
-                                  artworkState: artworkState,
-                                );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
-                      child: AppInfiniteStaggeredGrid(
-                        padding: EdgeInsets.zero,
-                        onRefresh: downloadsPagingController.refresh,
-                        pagingController: downloadsPagingController,
-                        itemBuilder: (context, artworkState, index) {
-                          final artwork = artworkState.artwork;
-                          return artwork.thumbnailUrl!.length > 1
-                              ? MultipleImagArt(
-                                  artworkState: artworkState,
-                                  index: index,
-                                  resolution: artwork.resolution!.first,
-                                  borderRadius: 8,
-                                )
-                              : SingleImageArt(
-                                  borderRadius: 8,
-                                  artworkState: artworkState,
-                                );
-                        },
-                      ),
-                    ),
+                    UserArtworks(username: username),
+                    UserLikedArtworks(username: username),
+                    UserDownloadedArtworks(username: username),
                     Container(),
                   ],
                 ),
               );
             },
             error: (err, _) {
-              return LoadingError(
-                errorMessage: err.toString(),
-                showRefresh: true,
-                onRefresh: () {
-                  ref.invalidate(getUserProvider);
-                },
+              return Center(
+                child: LoadingError(
+                  errorMessage: err.toString(),
+                  showRefresh: true,
+                  onRefresh: () {
+                    ref.invalidate(getUserProvider);
+                  },
+                ),
               );
             },
             loading: () {
@@ -366,37 +150,5 @@ class UserProfileScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class UserProfileTabBarDelegate extends SliverPersistentHeaderDelegate {
-  const UserProfileTabBarDelegate({
-    required this.tabBar,
-  });
-
-  final Widget tabBar;
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      height: maxExtent,
-      child: Center(child: tabBar),
-    );
-  }
-
-  @override
-  double get maxExtent => 50;
-
-  @override
-  double get minExtent => 50;
-
-  @override
-  bool shouldRebuild(covariant UserProfileTabBarDelegate oldDelegate) {
-    return false;
   }
 }

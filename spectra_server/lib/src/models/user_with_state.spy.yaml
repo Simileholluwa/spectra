@@ -1,0 +1,4 @@
+class: UserWithState
+fields:
+  user: User
+  isFollowing: bool

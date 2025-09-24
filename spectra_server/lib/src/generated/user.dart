@@ -21,7 +21,7 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     this.user,
     this.email,
     this.username,
-    this.bio,
+    String? bio,
     this.profileImageUrl,
     this.website,
     this.location,
@@ -33,7 +33,8 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     this.likedArtworks,
     DateTime? createdAt,
     this.updatedAt,
-  })  : followersCount = followersCount ?? 0,
+  })  : bio = bio ?? 'Hello there, welcome to my profile!',
+        followersCount = followersCount ?? 0,
         followingCount = followingCount ?? 0,
         artworksCount = artworksCount ?? 0,
         likesCount = likesCount ?? 0,
@@ -342,6 +343,7 @@ class UserTable extends _i1.Table<int?> {
     bio = _i1.ColumnString(
       'bio',
       this,
+      hasDefault: true,
     );
     profileImageUrl = _i1.ColumnString(
       'profileImageUrl',

@@ -5,7 +5,7 @@ import 'package:spectra_flutter/features/user/user.dart';
 part 'get_user_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<User> getUser(
+Future<UserWithState> getUser(
   Ref ref,
   String username,
 ) async {

@@ -120,5 +120,24 @@ final getUserDownloadedArtworksUsecaseProvider =
 // ignore: unused_element
 typedef GetUserDownloadedArtworksUsecaseRef
     = AutoDisposeProviderRef<GetUserDownloadedArtworksUsecase>;
+String _$toggleFollowUsecaseHash() =>
+    r'704f77ac7947031f70a513d2ba7f59aaf6b807d4';
+
+/// See also [toggleFollowUsecase].
+@ProviderFor(toggleFollowUsecase)
+final toggleFollowUsecaseProvider =
+    AutoDisposeProvider<ToggleFollowUsecase>.internal(
+  toggleFollowUsecase,
+  name: r'toggleFollowUsecaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$toggleFollowUsecaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ToggleFollowUsecaseRef = AutoDisposeProviderRef<ToggleFollowUsecase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

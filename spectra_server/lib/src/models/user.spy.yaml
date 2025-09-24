@@ -5,7 +5,7 @@ fields:
   user: module:auth:UserInfo?, relation(onDelete=Cascade)
   email: String?
   username: String?
-  bio: String?
+  bio: String?, default="Hello there, welcome to my profile!"
   profileImageUrl: String?
   website: String?
   location: String?

@@ -6,7 +6,7 @@ part of 'get_user_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getUserHash() => r'cba322182740d16904b0dc41d259e7796fdc314c';
+String _$getUserHash() => r'52541081434d3647f619846c9d4e93bf482936f2';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,7 +34,7 @@ class _SystemHash {
 const getUserProvider = GetUserFamily();
 
 /// See also [getUser].
-class GetUserFamily extends Family<AsyncValue<User>> {
+class GetUserFamily extends Family<AsyncValue<UserWithState>> {
   /// See also [getUser].
   const GetUserFamily();
 
@@ -72,7 +72,7 @@ class GetUserFamily extends Family<AsyncValue<User>> {
 }
 
 /// See also [getUser].
-class GetUserProvider extends FutureProvider<User> {
+class GetUserProvider extends FutureProvider<UserWithState> {
   /// See also [getUser].
   GetUserProvider(
     String username,
@@ -106,7 +106,7 @@ class GetUserProvider extends FutureProvider<User> {
 
   @override
   Override overrideWith(
-    FutureOr<User> Function(GetUserRef provider) create,
+    FutureOr<UserWithState> Function(GetUserRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -123,7 +123,7 @@ class GetUserProvider extends FutureProvider<User> {
   }
 
   @override
-  FutureProviderElement<User> createElement() {
+  FutureProviderElement<UserWithState> createElement() {
     return _GetUserProviderElement(this);
   }
 
@@ -143,12 +143,12 @@ class GetUserProvider extends FutureProvider<User> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin GetUserRef on FutureProviderRef<User> {
+mixin GetUserRef on FutureProviderRef<UserWithState> {
   /// The parameter `username` of this provider.
   String get username;
 }
 
-class _GetUserProviderElement extends FutureProviderElement<User>
+class _GetUserProviderElement extends FutureProviderElement<UserWithState>
     with GetUserRef {
   _GetUserProviderElement(super.provider);
 

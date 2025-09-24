@@ -11,11 +11,29 @@ class UserRepositoryImpl implements UserRepository {
   final UserRemoteDatasource _remoteDatasource;
 
   @override
-  Future<Either<Failure, User>> getUser({
+  Future<Either<Failure, UserWithState>> getUser({
     required String username,
   }) async {
     try {
       final result = await _remoteDatasource.getUser(
+        username: username,
+      );
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(
+          message: e.message,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> toggleFollow({
+    required String username,
+  }) async {
+    try {
+      final result = await _remoteDatasource.toggleFollow(
         username: username,
       );
       return Right(result);

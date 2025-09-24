@@ -51,3 +51,11 @@ GetUserDownloadedArtworksUsecase getUserDownloadedArtworksUsecase(
     GetUserDownloadedArtworksUsecase(
       repository: ref.watch(userRepositoryProvider),
     );
+
+@riverpod
+ToggleFollowUsecase toggleFollowUsecase(
+  Ref ref,
+) =>
+    ToggleFollowUsecase(
+      repository: ref.watch(userRepositoryProvider),
+    );
